@@ -1,0 +1,185 @@
+Create a comprehensive search page for SGS Locations based on these specific design requirements from imagelocations.com:
+
+PAGE: /app/locations/page.tsx
+
+LAYOUT STRUCTURE:
+
+1. TOP SEARCH SECTION (above filters):
+   - Large prominent section with dashed border
+   - Heading: "Search a Location Using An Image As Reference"
+   - Subtext: "Drag & Drop an image here or click here to select a file"
+   - Drag-and-drop zone for reverse image search
+   - This should be a visual drag-drop area (functional image search can be Phase 2)
+
+2. FILTER BAR (horizontal row of dropdowns):
+   Create a horizontal filter bar with these dropdown filters:
+   - Categories (Residential, Commercial, Natural, Industrial, Historical)
+   - City (Dallas, Fort Worth, Frisco, Denton, Plano, etc.)
+   - County (Dallas County, Tarrant County, Denton County, Collin County)
+   - Access (Easy Access, Gated, Secure, Public Access)
+   - Floors (1 Floor, 2 Floors, 3+ Floors, Multi-Level)
+   - Patio/Balconies (Patio, Balcony, Both, None)
+   - Pool (Yes/No)
+   - Walls (Brick, Wood, Stone, Modern, Glass)
+   - Yard (Large Yard, Small Yard, No Yard)
+   
+   Each dropdown should:
+   - Have a clean, minimal design
+   - Show chevron down icon
+   - Display selected count as badge if filters applied
+   - Be responsive (collapse to "Filters" button on mobile)
+
+3. LEFT SIDEBAR FILTERS (collapsible panel):
+   - Width: ~280px on desktop, slide-in drawer on mobile
+   - At top: Search box with placeholder "Search here..."
+   - Scrollable filter list with checkboxes
+   - Each filter item shows:
+     * Checkbox (custom styled, not default)
+     * Filter name (e.g., "Pool", "Modern", "Kitchen")
+     * Count in gray (e.g., "928", "444")
+   
+   Filter categories to include:
+   - Style tags: Pool, New, Kitchen, Americana, Views, Modern, Bathroom, Retro, Driveway, Mediterranean, Contemporary, Ranch, Luxury, Industrial, Historical
+   - Each checkbox should have smooth check animation
+   - Count should update based on other active filters
+   
+   Bottom of sidebar:
+   - "Clear All Filters" text button
+   - "Apply Filters" primary button
+
+4. MAIN RESULTS AREA:
+   - Grid layout: 3 columns on desktop, 2 on tablet, 1 on mobile
+   - Large property images (maintain 16:9 or 4:3 aspect ratio)
+   - Each property card:
+     * Full-width image with smooth hover zoom effect
+     * Overlay on hover showing "View Details" button
+     * Small heart icon (top right) to save location
+     * Property name overlay at bottom
+     * Location city in smaller text
+   
+   - Empty state when no results:
+     * Icon (search with X)
+     * "No locations found matching your criteria"
+     * "Try adjusting your filters" suggestion
+     * "Clear Filters" button
+
+5. SEARCH FUNCTIONALITY:
+   - Keyword search bar on left side of filter bar (with search icon)
+   - Placeholder: "Search locations..."
+   - Search should filter as user types (debounced)
+
+6. RESULTS COUNT & SORTING:
+   - Top of results area: "Showing 1-24 of 156 locations"
+   - Sort dropdown on right: Relevance, Newest First, Price: Low to High, Price: High to Low, Alphabetical
+   - View toggle: Grid/List/Map icons
+
+7. PAGINATION:
+   - Bottom of results
+   - Numbers: « ‹ 1 2 3 4 5 6 7 › »
+   - Current page in red/primary color
+   - Other pages in gray
+   - Hover effects on page numbers
+   - Show max 7 page numbers with ellipsis for more
+
+DESIGN SPECIFICATIONS:
+
+Colors:
+- Primary: Red (#DC2626 or similar) for active filters, pagination
+- Background: White (#FFFFFF)
+- Text: Dark gray (#1F2937) for headings, medium gray (#6B7280) for counts
+- Borders: Light gray (#E5E7EB)
+- Hover: Very light gray (#F9FAFB)
+
+Typography:
+- Filter labels: 14px, medium weight
+- Counts: 14px, regular weight, gray
+- Headings: 18px, semi-bold
+- Property names: 16px, medium weight
+
+Spacing:
+- Filter items: 12px padding top/bottom
+- Grid gap: 24px between cards
+- Sidebar padding: 20px
+- Section margins: 32px between major sections
+
+Interactions:
+- Smooth transitions on all hover effects (200ms)
+- Checkbox animations
+- Image zoom on hover (scale 1.05)
+- Filter dropdown slide animations
+- Loading skeletons while fetching results
+
+RESPONSIVE BEHAVIOR:
+
+Desktop (1024px+):
+- Full sidebar visible
+- 3-column grid
+- All filters in horizontal bar
+
+Tablet (768px - 1023px):
+- Collapsible sidebar (hamburger icon)
+- 2-column grid
+- Some filters move to dropdown menu
+
+Mobile (<768px):
+- Sidebar as slide-in drawer
+- 1-column grid
+- All filters in "Filter" button that opens modal
+- Stack search bar full width
+- Simplified pagination (‹ 1 of 7 ›)
+
+TECHNICAL REQUIREMENTS:
+
+1. Use URL search params for all filters (shareable URLs)
+   Example: /locations?city=dallas&pool=true&style=modern&page=2
+
+2. Implement debounced search (300ms delay)
+
+3. Show loading states:
+   - Skeleton cards while loading
+   - Subtle loader on filter changes
+   - Disabled state on pagination during load
+
+4. Persist filters in localStorage (optional)
+
+5. Track filter usage for analytics
+
+6. Lazy load images as user scrolls
+
+Make it look clean, professional, and performant. The UI should feel smooth and responsive. Use shadcn/ui components where applicable (Select, Checkbox, Button, Input, Skeleton).
+
+Create the components needed:
+- /components/PropertyFilters.tsx (sidebar filters)
+- /components/PropertyFilterBar.tsx (top dropdown filters)
+- /components/PropertyGrid.tsx (results grid)
+- /components/PropertyCard.tsx (individual card)
+- /components/ImageSearchBox.tsx (drag-drop search)
+- /components/SearchPagination.tsx (pagination component)
+
+Implement the full search logic with proper TypeScript types and error handling.
+```
+
+---
+
+## **ADDITIONAL NOTES TO MENTION:**
+
+After Replit creates the initial version, you may need to refine with these follow-up prompts:
+
+**For styling refinements:**
+```
+The search page looks good, but let's refine a few things:
+1. Make the filter checkboxes more polished with custom styling (not default browser checkboxes)
+2. Add smooth slide-down animations when opening filter dropdowns
+3. Make the property card hover effect more elegant with a subtle overlay
+4. Add a small red badge on the "Filters" button showing active filter count
+5. Make pagination numbers slightly larger and more touchable on mobile
+```
+
+**For functionality enhancements:**
+```
+Add these functional improvements to the search page:
+1. When user checks a filter, immediately update the results (don't require "Apply" button) - but keep the button for mobile
+2. Add a subtle animation when results update
+3. Show "Applying filters..." loading state
+4. Add "Recently Viewed" section below results if user is logged in
+5. Implement the reverse image search - upload image and search for visually similar properties
