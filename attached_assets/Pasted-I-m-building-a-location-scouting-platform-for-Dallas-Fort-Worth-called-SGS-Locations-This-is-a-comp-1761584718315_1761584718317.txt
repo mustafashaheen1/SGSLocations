@@ -1,0 +1,1156 @@
+I'm building a location scouting platform for Dallas-Fort Worth called SGS Locations. This is a comprehensive website that connects property owners with film/TV production companies.
+
+KEY REQUIREMENTS:
+- Next.js 14 with App Router and TypeScript
+- Tailwind CSS with shadcn/ui components
+- PostgreSQL database (we'll use Supabase)
+- Three user types: Public visitors, Production Professionals, Property Owners, and Admins
+- Advanced search and filtering for 65+ filming locations
+- Image galleries and interactive maps
+- User dashboards for different roles
+- Inquiry/messaging system
+
+FIRST TASK:
+1. Set up the initial project structure with proper folder organization
+2. Install necessary dependencies: 
+   - shadcn/ui components
+   - next-auth for authentication
+   - @supabase/supabase-js for database
+   - react-hook-form and zod for form handling
+   - lucide-react for icons
+   - date-fns for date handling
+3. Create a proper folder structure:
+   - /app (for Next.js app router)
+   - /components (ui components)
+   - /lib (utilities and database)
+   - /types (TypeScript types)
+   - /public (static assets)
+4. Set up Tailwind config with custom colors matching a professional real estate/film industry aesthetic
+5. Initialize shadcn/ui with components we'll need: Button, Card, Input, Select, Dialog, Tabs
+
+Create the base structure and show me the file tree when done.
+```
+
+**What to Check:**
+✅ Project structure is created
+✅ Dependencies are installed
+✅ Tailwind is configured
+✅ No errors in terminal
+
+---
+
+# **PHASE 2: DATABASE SCHEMA & SETUP**
+
+## Step 2.1: Set Up Supabase Account
+
+**Manual Action:**
+1. Go to [supabase.com](https://supabase.com)
+2. Create free account
+3. Create new project: "sgs-locations"
+4. Save your project URL and anon key
+5. In Replit, add these to Secrets:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+## Step 2.2: Database Schema Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Now let's create the complete database schema for SGS Locations. I need SQL migration files that I'll run in Supabase.
+
+Create SQL migration files for these tables:
+
+1. **users** table:
+   - id (uuid, primary key)
+   - email (unique)
+   - password_hash
+   - user_type (enum: 'production_professional', 'property_owner', 'admin')
+   - full_name
+   - company_name
+   - phone
+   - profile_image_url
+   - is_verified (boolean)
+   - created_at, updated_at
+
+2. **properties** table:
+   - id (uuid, primary key)
+   - owner_id (foreign key to users)
+   - property_name
+   - property_type (enum: 'residential', 'commercial', 'natural', 'industrial', 'historical')
+   - description (text)
+   - full_address
+   - city
+   - state
+   - zip_code
+   - latitude, longitude
+   - square_footage
+   - bedrooms, bathrooms
+   - parking_capacity
+   - lot_size
+   - year_built
+   - architectural_style
+   - status (enum: 'pending', 'approved', 'rejected')
+   - is_featured (boolean)
+   - view_count (integer)
+   - created_at, updated_at
+
+3. **property_images** table:
+   - id (uuid)
+   - property_id (foreign key)
+   - image_url
+   - is_hero_image (boolean)
+   - display_order (integer)
+   - caption
+
+4. **property_features** table:
+   - id (uuid)
+   - property_id (foreign key)
+   - feature_name (pool, ranch, lake_view, modern_kitchen, etc.)
+
+5. **property_pricing** table:
+   - id (uuid)
+   - property_id (foreign key)
+   - production_type (film, tv, commercial, photography)
+   - daily_rate
+   - half_day_rate
+
+6. **inquiries** table:
+   - id (uuid)
+   - property_id (foreign key)
+   - sender_id (foreign key to users)
+   - recipient_id (foreign key to users)
+   - subject
+   - message (text)
+   - status (enum: 'pending', 'responded', 'archived')
+   - created_at
+
+7. **saved_locations** table:
+   - id (uuid)
+   - user_id (foreign key)
+   - property_id (foreign key)
+   - collection_name
+   - notes
+   - created_at
+
+8. **saved_searches** table:
+   - id (uuid)
+   - user_id (foreign key)
+   - search_name
+   - search_criteria (jsonb)
+   - email_alerts_enabled (boolean)
+   - created_at
+
+Create separate migration files for each table with proper indexes and foreign key constraints. Also create a seed file with sample data for testing.
+```
+
+**What to Check:**
+✅ Migration SQL files are created in a /supabase/migrations folder
+✅ Each table has proper constraints and indexes
+✅ Seed data file is created
+
+**Manual Action:**
+- Copy each SQL migration file content
+- Go to Supabase SQL Editor
+- Run each migration in order
+- Run seed data
+
+---
+
+# **PHASE 3: AUTHENTICATION SYSTEM**
+
+## Step 3.1: NextAuth Setup Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Set up NextAuth.js authentication system with the following requirements:
+
+1. Configure NextAuth with:
+   - Email/password authentication using Credentials provider
+   - Session strategy: JWT
+   - Custom sign-in page at /auth/signin
+   - Custom registration pages for different user types
+   - Password hashing with bcrypt
+
+2. Create these auth-related files:
+   - /app/api/auth/[...nextauth]/route.ts (NextAuth configuration)
+   - /lib/auth.ts (auth helper functions)
+   - /app/auth/signin/page.tsx (sign in page)
+   - /app/auth/register/production/page.tsx (production professional registration)
+   - /app/auth/register/property-owner/page.tsx (property owner registration)
+
+3. Sign-in page should:
+   - Have tabs for "Production Professional" and "Property Owner" login
+   - Include social login buttons (Google, Facebook) - just UI for now
+   - Link to registration pages
+   - Clean, professional design
+
+4. Registration pages should collect:
+   - Production Professional: full name, email, password, company name, phone, production types interested in
+   - Property Owner: full name, email, password, phone, property ownership verification
+
+5. Create middleware to protect routes based on user type
+
+6. Add session hooks and utilities for checking authentication status
+
+Make the forms beautiful using shadcn/ui components with proper validation using react-hook-form and zod.
+```
+
+**What to Check:**
+✅ Auth API routes are working
+✅ Sign-in page loads correctly
+✅ Registration forms have validation
+✅ Can create test accounts
+
+---
+
+# **PHASE 4: HOMEPAGE & LAYOUT**
+
+## Step 4.1: Main Layout & Navigation Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create the main layout and navigation system for SGS Locations. Reference imagelocations.com for inspiration but simplify the navigation.
+
+1. Create /components/layout/Header.tsx with:
+   - SGS Locations logo (left side)
+   - Navigation menu: Home, Locations, About, Contact, List Your Property
+   - Right side: Search icon, User account menu (when logged in) or "Sign In" button
+   - Sticky header that becomes compact on scroll
+   - Mobile responsive with hamburger menu
+
+2. Create /components/layout/Footer.tsx with:
+   - 4-column layout: About SGS, Quick Links, Location Categories, Contact Info
+   - Social media icons
+   - Copyright and legal links
+   - Professional, clean design
+
+3. Create /app/page.tsx (Homepage) with these sections:
+   
+   a) HERO SECTION:
+      - Full-width, full-height hero with video/image background
+      - Overlay with centered content
+      - Heading: "Dallas Fort Worth's Largest Location Database"
+      - Subheading: "65+ filming locations across North and Central Texas"
+      - Two prominent CTAs: "Search Locations" (primary) and "List Your Property" (secondary)
+      - Quick search bar below CTAs
+   
+   b) FEATURED LOCATIONS:
+      - Grid of 6 curated property cards
+      - Each card: image, property name, location, property type, "View Details" button
+      - Hover effects with smooth transitions
+   
+   c) BROWSE BY CATEGORY:
+      - 8-12 visual category tiles in grid
+      - Each tile: background image, category name, location count
+      - Categories: Estates, Modern Architecture, Natural Settings, Urban Spaces, Historical Properties, etc.
+   
+   d) CLIENT SHOWCASE:
+      - Logos/posters section for productions
+      - Include: Landman, Madison, Yellowstone, Lioness
+      - Subtle animations
+   
+   e) SERVICES OVERVIEW:
+      - 3-column layout
+      - Services: Location Scouting, Permitting Services, Location Photography
+      - Icons and brief descriptions
+   
+   f) STATISTICS BANNER:
+      - 4 stats: "20+ Years Experience", "65+ Locations", "10+ Cities Covered", "500+ Productions Served"
+      - Animated counters
+   
+   g) DUAL CTA SECTION:
+      - Split design targeting property owners and production teams
+      - Strong CTAs for each audience
+
+Make it visually stunning, professional, and responsive. Use high-quality placeholder images for now.
+```
+
+**What to Check:**
+✅ Homepage looks professional and modern
+✅ Navigation works on mobile and desktop
+✅ All sections are responsive
+✅ Links navigate correctly
+
+---
+
+# **PHASE 5: LOCATIONS CATALOG & SEARCH**
+
+## Step 5.1: Location Library Page Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create the locations catalog system with advanced search and filtering capabilities. Reference hollywoodlocations.com for search functionality inspiration.
+
+1. Create /app/locations/page.tsx with:
+   
+   a) SEARCH HEADER:
+      - Full-width search bar at top
+      - Keyword search with autocomplete
+      - View toggle buttons: Grid / List / Map
+      - Results count display
+      - "Save Search" button (for logged-in users)
+   
+   b) FILTER SIDEBAR (collapsible on mobile):
+      - Location Type checkboxes: Residential, Commercial, Natural, Industrial, Historical
+      - Geographic Location multi-select: North Ft. Worth, Denton, Dallas, Frisco, etc.
+      - Property Features checkboxes: Pool, Ranch, Lake View, Parking, Modern Kitchen, etc.
+      - Price Range slider with min/max inputs
+      - Date Availability calendar picker
+      - Property Size select: <1000 sq ft, 1000-2000, 2000-5000, 5000+
+      - Style/Aesthetic: Modern, Traditional, Mid-Century, Contemporary, Rustic, Industrial
+      - "Clear All Filters" and "Apply Filters" buttons
+   
+   c) RESULTS AREA:
+      - Grid View: 3-4 columns of property cards
+      - List View: Full-width rows with more details
+      - Map View: Interactive map with property markers
+      - Sorting dropdown: Relevance, Newest, Price (Low/High), Alphabetical
+      - Pagination: 24, 48, 96 results per page
+   
+   d) PROPERTY CARDS (for grid):
+      - Large image with hover zoom effect
+      - Property name and location
+      - Property type badge
+      - Quick specs (sq ft, beds/baths if applicable)
+      - Price range (if user is logged in)
+      - Heart icon to save (if logged in)
+      - "View Details" button
+
+2. Create /components/PropertyCard.tsx as reusable component
+
+3. Create /components/PropertyFilters.tsx for the filter sidebar
+
+4. Implement URL search params for shareable filtered results
+
+5. Add loading states and empty states
+
+Make the search experience smooth and intuitive with real-time filtering when filters change.
+```
+
+**What to Check:**
+✅ Filters work correctly
+✅ Search results update in real-time
+✅ URL parameters update with filters
+✅ All view modes (grid/list/map) work
+✅ Responsive on mobile
+
+---
+
+# **PHASE 6: PROPERTY DETAIL PAGE**
+
+## Step 6.1: Property Detail Page Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create a comprehensive property detail page that showcases all property information. Reference universal locations and image locations for inspiration.
+
+Create /app/locations/[id]/page.tsx with:
+
+1. HERO GALLERY SECTION:
+   - Large main image with thumbnail strip below
+   - Click thumbnail to change main image
+   - "View All Photos" button opens full-screen lightbox gallery
+   - Lightbox with navigation arrows, close button, image counter
+   - If video available, include video player
+
+2. PROPERTY OVERVIEW:
+   - Property name as H1
+   - Location (city, general area - not full address)
+   - Quick action buttons: Save to Favorites, Share, Download Tear Sheet
+   - Property type badges
+
+3. KEY SPECIFICATIONS GRID:
+   - 2-column responsive grid
+   - Include: Property Type, Square Footage, Bedrooms/Bathrooms, Parking Capacity, 
+     Lot Size, Year Built, Architectural Style, Lighting Conditions
+   - Icons for each specification
+
+4. DETAILED DESCRIPTION:
+   - Rich text description from property owner
+   - Expandable "Read More" if text is long
+
+5. PRODUCTION INFORMATION:
+   - Suitable production types (Film, TV, Commercial, Photography)
+   - Load-in capabilities
+   - Crew amenities nearby
+   - Special considerations
+
+6. FEATURES SECTION:
+   - Visual tags/pills for all property features
+   - Organized by category (Interior, Exterior, Amenities, etc.)
+
+7. AVAILABILITY CALENDAR (logged-in users only):
+   - Interactive month calendar
+   - Blocked dates shown in red
+   - Available dates in green
+   - Ability to select date range
+
+8. PRICING INFORMATION (logged-in users only):
+   - Table showing rates by production type
+   - Daily and half-day rates
+   - Additional fees information
+
+9. LOCATION MAP:
+   - Interactive Google Map showing general area (not exact address)
+   - Nearby amenities markers
+
+10. INQUIRY FORM:
+    - Contact form with: name, email, phone, company, production type, 
+      shoot dates, message, file attachment
+    - "Submit Inquiry" button
+    - For non-logged users: prompt to sign in or create account
+
+11. SIMILAR LOCATIONS:
+    - 4-6 property cards of similar locations
+    - Based on type, style, or location
+
+Make it clean, professional, and easy to navigate. Add smooth scroll animations and loading states.
+```
+
+**What to Check:**
+✅ Image gallery and lightbox work smoothly
+✅ All property information displays correctly
+✅ Inquiry form validates and submits
+✅ Similar locations load
+✅ Map displays correctly
+
+---
+
+# **PHASE 7: PRODUCTION PROFESSIONAL DASHBOARD**
+
+## Step 7.1: Dashboard Layout Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create the Production Professional dashboard with all features from the specification. Reference universallocations.com wishlist functionality.
+
+Create /app/dashboard/production/page.tsx with:
+
+1. DASHBOARD LAYOUT:
+   - Sidebar navigation (collapsible on mobile): 
+     * Overview
+     * Saved Locations
+     * My Searches
+     * Inquiries
+     * Account Settings
+   - Main content area
+
+2. OVERVIEW TAB (/app/dashboard/production/page.tsx):
+   - Welcome message with user's name
+   - Statistics cards:
+     * Total Saved Locations (number with icon)
+     * Active Inquiries (number with icon)
+     * Saved Searches (number with icon)
+     * Locations Viewed This Month (number with icon)
+   - Recent Activity feed (last 10 actions)
+   - Recommended Locations carousel based on viewing history
+   - Quick action buttons
+
+3. SAVED LOCATIONS TAB (/app/dashboard/production/saved/page.tsx):
+   - Create/manage collections (folders)
+   - Grid view of all saved properties
+   - Bulk actions: Move to Collection, Remove, Export, Share
+   - Filter by collection
+   - Add notes to saved locations
+   - Tagging system
+   - Export to PDF functionality
+
+4. MY SEARCHES TAB (/app/dashboard/production/searches/page.tsx):
+   - List of all saved searches
+   - Each search shows: name, criteria summary, date saved, results count
+   - Email alert toggle for each search
+   - Alert frequency settings (instant, daily, weekly)
+   - "Run Search" button to see current results
+   - Edit/Delete options
+
+5. INQUIRIES TAB (/app/dashboard/production/inquiries/page.tsx):
+   - Filterable list: All, Pending, Responded, Archived
+   - Each inquiry card shows: property thumbnail, property name, date sent, status, preview of message
+   - Click to expand full conversation thread
+   - Reply functionality
+   - Archive/delete options
+   - Success rate metrics
+
+6. ACCOUNT SETTINGS TAB (/app/dashboard/production/settings/page.tsx):
+   - Profile information form
+   - Company details
+   - Password change
+   - Email notification preferences
+   - Privacy settings
+   - Delete account option
+
+Use clean, modern dashboard UI with proper loading states and empty states for each section.
+```
+
+**What to Check:**
+✅ All tabs navigate correctly
+✅ Statistics display accurately
+✅ Saved locations can be organized
+✅ Inquiries thread properly
+✅ Settings can be updated
+
+---
+
+# **PHASE 8: PROPERTY OWNER DASHBOARD & LISTING**
+
+## Step 8.1: Property Owner Dashboard Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create the Property Owner dashboard and property listing process.
+
+1. Create /app/dashboard/owner/page.tsx with:
+   
+   a) OVERVIEW TAB:
+      - Welcome message
+      - Property performance summary cards:
+        * Total Properties Listed
+        * Total Views (all properties)
+        * Active Inquiries
+        * This Month's Earnings
+      - Property performance chart (views over time)
+      - Recent inquiries preview
+      - Quick actions: Add New Property, View Calendar, Check Messages
+
+   b) MY PROPERTIES TAB (/app/dashboard/owner/properties/page.tsx):
+      - Grid of property cards showing owner's properties
+      - Each card: image, name, status badge (Pending/Approved/Rejected), view count, inquiry count
+      - Edit/Delete/Manage buttons
+      - Filter by status
+      - "Add New Property" prominent button
+
+   c) INQUIRIES TAB (/app/dashboard/owner/inquiries/page.tsx):
+      - Similar to production dashboard but from owner perspective
+      - Organized by property
+      - Quick response templates
+      - Mark as responded/archived
+
+   d) CALENDAR TAB (/app/dashboard/owner/calendar/page.tsx):
+      - Full calendar view showing all bookings across all properties
+      - Color-coded by property
+      - Block/unblock dates
+      - Add notes to specific dates
+
+   e) ANALYTICS TAB (/app/dashboard/owner/analytics/page.tsx):
+      - Detailed metrics per property
+      - Views over time chart
+      - Inquiry conversion rates
+      - Most popular search terms that led to property
+      - Comparison with similar properties
+
+2. Create multi-step property listing flow /app/dashboard/owner/properties/new/page.tsx:
+
+   STEP 1 - PROPERTY BASICS:
+   - Property Name (required)
+   - Property Type dropdown (required)
+   - Full Address fields (required)
+   - Property Description (rich text editor, required)
+   - "Save Draft" and "Continue" buttons
+
+   STEP 2 - PROPERTY DETAILS:
+   - Square Footage
+   - Bedrooms/Bathrooms
+   - Parking Capacity
+   - Lot Size
+   - Year Built
+   - Architectural Style dropdown
+   - Features checklist (pool, modern kitchen, lake view, etc.)
+
+   STEP 3 - PHOTOS & MEDIA:
+   - Drag-and-drop image upload (minimum 10 photos required)
+   - Set hero image
+   - Reorder photos with drag-and-drop
+   - Add captions to photos
+   - Optional: YouTube video URL
+   - Image compression and optimization
+
+   STEP 4 - AVAILABILITY & PRICING:
+   - Production types available for (checkboxes)
+   - Pricing table for each production type (daily rate, half-day rate)
+   - Calendar to block unavailable dates
+   - Additional fees/notes
+
+   STEP 5 - REVIEW & SUBMIT:
+   - Preview of entire listing
+   - Terms and conditions checkbox
+   - Submit for review
+   - Confirmation message: "Your property will be reviewed within 2-3 business days"
+
+Include progress indicator showing which step user is on. Save progress automatically. Allow navigation between steps.
+```
+
+**What to Check:**
+✅ All dashboard tabs load correctly
+✅ Property listing steps flow smoothly
+✅ Draft saving works
+✅ Image upload works
+✅ Form validation is proper
+
+---
+
+# **PHASE 9: ADMIN PANEL**
+
+## Step 9.1: Admin Dashboard Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create comprehensive admin panel at /app/admin with complete management capabilities.
+
+1. ADMIN LAYOUT (/app/admin/layout.tsx):
+   - Admin sidebar navigation:
+     * Dashboard Overview
+     * Property Management
+     * User Management
+     * Inquiries
+     * Content Management
+     * System Settings
+     * Reports & Analytics
+   - Admin-only access middleware
+
+2. DASHBOARD OVERVIEW (/app/admin/page.tsx):
+   - Key metrics cards:
+     * Total Properties (Active/Pending/Rejected)
+     * Total Users (by type)
+     * Pending Approvals (needs immediate attention)
+     * This Month's Inquiries
+     * Platform Activity Score
+   - Recent activity feed
+   - Quick actions panel
+   - Alerts for items needing attention
+
+3. PROPERTY MANAGEMENT (/app/admin/properties/page.tsx):
+   - Tabs: All, Pending Approval, Active, Rejected, Featured
+   - Table view with columns: Image, Property Name, Owner, Type, Status, Views, Date Submitted, Actions
+   - Bulk actions: Approve, Reject, Feature, Delete
+   - Search and filter properties
+   - Click property to review:
+     * Full property details
+     * Owner information
+     * Approve/Reject buttons with feedback form
+     * Edit property details
+     * Toggle featured status
+     * View analytics
+
+4. USER MANAGEMENT (/app/admin/users/page.tsx):
+   - Filter by user type (Production/Property Owner/Admin)
+   - User table: Name, Email, Type, Join Date, Properties/Activity, Status, Actions
+   - Actions: View Profile, Edit, Suspend, Delete, Reset Password, Send Message
+   - User detail view shows full history and activity
+
+5. CONTENT MANAGEMENT (/app/admin/content/page.tsx):
+   - Homepage Management:
+     * Select Featured Properties (drag to reorder)
+     * Upload/manage client logos
+     * Edit hero section text and CTA buttons
+     * Manage statistics numbers
+   - Category Management:
+     * Edit category names and descriptions
+     * Upload category images
+     * Reorder categories
+   - About Page Editor (rich text)
+   - FAQ Manager (add/edit/reorder)
+
+6. SYSTEM SETTINGS (/app/admin/settings/page.tsx):
+   - Email Templates editor
+   - Notification Rules configuration
+   - Search Algorithm Weights
+   - Default Pricing Tiers
+   - Map Boundaries settings
+   - Permit Services Integration settings
+   - Platform-wide Announcements
+
+7. REPORTS & ANALYTICS (/app/admin/reports/page.tsx):
+   - Date range selector
+   - Export data buttons (CSV, PDF)
+   - Reports:
+     * User Registration Trends
+     * Most Popular Search Terms
+     * Top Performing Properties
+     * Inquiry-to-Booking Conversion
+     * User Engagement Metrics
+   - Interactive charts and graphs
+
+Include proper role checking middleware. Make UI clean and efficient for admin tasks.
+```
+
+**What to Check:**
+✅ Only admins can access admin panel
+✅ Property approval workflow works
+✅ Content management updates homepage
+✅ User management functions work
+✅ Reports generate correctly
+
+---
+
+# **PHASE 10: ADVANCED FEATURES**
+
+## Step 10.1: Google Maps Integration Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Integrate Google Maps API throughout the site:
+
+1. Add Google Maps API key to environment variables
+
+2. Create /components/Map.tsx component:
+   - Display map with markers for properties
+   - Clustered markers when zoomed out
+   - Click marker to show property popup
+   - Custom marker icons based on property type
+
+3. Update locations search page map view:
+   - Show all filtered results on map
+   - Sync map markers with filtered results
+   - Click marker to open property detail in sidebar
+   - Draw boundaries for Dallas-Fort Worth area
+
+4. Update property detail page map:
+   - Show approximate location (not exact address)
+   - Show nearby amenities with different marker types
+   - 1-mile radius circle around property
+
+5. Create location selection map for property listing:
+   - Address search autocomplete
+   - Pin placement on map
+   - Verify location is within service area
+
+Implement proper loading states and error handling for map API.
+```
+
+## Step 10.2: Image Upload & Storage Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Implement image upload system with cloud storage:
+
+1. Set up Cloudinary account (free tier):
+   - Get cloud name, API key, API secret
+   - Add to environment variables
+
+2. Create /lib/cloudinary.ts with:
+   - Upload function with automatic compression
+   - Image transformation for thumbnails
+   - Delete function
+   - Get signed URL function
+
+3. Create /components/ImageUploader.tsx:
+   - Drag-and-drop interface
+   - Multiple file selection
+   - Image preview before upload
+   - Upload progress indicators
+   - File size validation (max 5MB)
+   - Accepted formats: JPG, PNG, WebP
+   - Automatic EXIF data removal for privacy
+
+4. Create /components/ImageGallery.tsx:
+   - Responsive grid layout
+   - Lightbox viewer with navigation
+   - Zoom functionality
+   - Download original option (for authorized users)
+   - Lazy loading for performance
+
+5. Update property listing form to use new uploader
+
+6. Implement image optimization:
+   - Serve WebP format when supported
+   - Responsive images with srcset
+   - Lazy loading for off-screen images
+   - CDN delivery
+
+Handle upload errors gracefully and provide clear feedback to users.
+```
+
+## Step 10.3: Advanced Search & Filtering Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Enhance the search functionality with advanced features:
+
+1. Implement full-text search in database:
+   - Create search indexes on property_name, description, features
+   - Use PostgreSQL full-text search capabilities
+   - Return relevant results ranked by relevance
+
+2. Create /lib/search.ts with search logic:
+   - Build complex queries from filter criteria
+   - Handle multiple filter combinations
+   - Implement relevance scoring
+   - Cache frequent searches
+
+3. Add autocomplete to search bar:
+   - Suggest properties, categories, and locations as user types
+   - Show recent searches
+   - Keyboard navigation support
+
+4. Implement saved search alerts system:
+   - Background job to check new properties against saved searches
+   - Email notification system
+   - Unsubscribe functionality
+
+5. Add search analytics:
+   - Track popular search terms
+   - Monitor zero-result searches
+   - Record click-through rates
+
+6. Create URL-based search sharing:
+   - Encode all filters in URL
+   - Shareable links
+   - Social media meta tags for shared searches
+
+Test with various search scenarios and edge cases.
+```
+
+## Step 10.4: Messaging & Inquiry System Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Build the messaging and inquiry system:
+
+1. Create inquiry submission flow:
+   - Form validation
+   - File attachment support (scripts, mood boards)
+   - Automatic email notification to property owner
+   - Confirmation email to sender
+
+2. Create /app/api/inquiries route handlers:
+   - POST: Create new inquiry
+   - GET: Fetch user's inquiries
+   - PATCH: Update inquiry status
+   - POST: Add message to thread
+
+3. Build message threading UI:
+   - Conversation view with chronological messages
+   - Real-time status updates
+   - Typing indicators (optional)
+   - File sharing in conversations
+   - Mark as read/unread
+
+4. Email notification system:
+   - New inquiry notification
+   - Response notification
+   - Reminder for unanswered inquiries (48 hours)
+   - Customizable email templates
+
+5. Create inquiry management for admins:
+   - View all platform inquiries
+   - Flag inappropriate messages
+   - Resolve disputes
+   - Export inquiry data
+
+Include spam prevention and rate limiting on inquiry submissions.
+```
+
+---
+
+# **PHASE 11: ADDITIONAL PAGES**
+
+## Step 11.1: About & Contact Pages Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Create About and Contact pages:
+
+1. ABOUT PAGE (/app/about/page.tsx):
+   - Hero section with company tagline
+   - Company History section:
+     * Founded 2006 in Fort Worth
+     * Timeline of milestones
+   - Service Area Map:
+     * Interactive map showing coverage
+     * Cities served listed
+   - Services We Offer:
+     * Location Scouting (detailed description)
+     * Permitting Services (description)
+     * Location Photography (description)
+   - Client Showcase:
+     * Grid of production logos
+     * Testimonials from productions
+   - Our Expertise:
+     * LMGI membership badges
+     * Real Estate Broker License
+     * Years of experience
+   - Team Section (if applicable):
+     * Photos and bios of key team members
+   - Mission & Values statement
+   - Strong CTA section at bottom
+
+2. CONTACT PAGE (/app/contact/page.tsx):
+   - Page header with title and description
+   - Contact Methods Cards:
+     * Office Location (with embedded Google Map)
+     * Phone with click-to-call
+     * Email with click-to-email
+     * Business Hours display
+   - General Inquiry Form:
+     * Fields: Name, Email, Phone, Company, Inquiry Type (dropdown), Message, File Upload
+     * reCAPTCHA integration
+     * Form validation
+     * Success message on submission
+   - Optional Permit Services Section:
+     * Dedicated contact: soandso@sgspermits.com
+     * Brief description
+     * Separate inquiry form
+   - FAQ Accordion:
+     * Common questions organized by topic
+     * Expandable answers
+   - Social Media Links
+
+Make both pages visually appealing and professional. Include proper SEO meta tags.
+```
+
+---
+
+# **PHASE 12: RESPONSIVE DESIGN & POLISH**
+
+## Step 12.1: Mobile Optimization Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Optimize the entire site for mobile devices:
+
+1. Review and fix responsive issues:
+   - Test all pages on mobile breakpoints (375px, 768px, 1024px, 1440px)
+   - Fix navigation menu for mobile (hamburger menu)
+   - Ensure touch targets are at least 44x44px
+   - Fix table layouts to scroll horizontally on mobile
+   - Optimize image sizes for mobile
+
+2. Mobile-specific enhancements:
+   - Sticky "Search" and "Filter" buttons on mobile search page
+   - Swipeable property card galleries
+   - Bottom sheet for filters on mobile
+   - Touch-optimized map controls
+   - Pull-to-refresh on dashboard pages
+
+3. Performance optimization:
+   - Implement image lazy loading
+   - Code splitting for routes
+   - Reduce initial bundle size
+   - Add loading skeletons
+   - Optimize font loading
+
+4. Add Progressive Web App (PWA) features:
+   - Install manifest.json
+   - Service worker for offline capability
+   - Add to home screen functionality
+   - Push notifications setup
+
+5. Test on actual devices:
+   - iOS Safari
+   - Chrome Android
+   - Different screen sizes
+
+Fix any issues discovered during testing.
+```
+
+## Step 12.2: Final Polish Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Add final polish and user experience improvements:
+
+1. Micro-interactions and animations:
+   - Smooth page transitions
+   - Button hover effects
+   - Card hover animations
+   - Loading state animations
+   - Success/error message animations
+   - Scroll-triggered animations
+
+2. Error handling:
+   - 404 page with helpful navigation
+   - 500 error page
+   - Form error messages
+   - API error handling
+   - Network error recovery
+   - Empty states for all lists
+
+3. Accessibility improvements:
+   - ARIA labels on all interactive elements
+   - Keyboard navigation support
+   - Focus indicators
+   - Alt text for all images
+   - Color contrast compliance (WCAG AA)
+   - Screen reader testing
+
+4. SEO optimization:
+   - Meta descriptions for all pages
+   - OpenGraph tags for social sharing
+   - Structured data (Schema.org) for properties
+   - XML sitemap generation
+   - Robots.txt file
+
+5. Loading states everywhere:
+   - Skeleton screens for content loading
+   - Shimmer effects
+   - Progress indicators
+   - Lazy loading indicators
+
+6. User feedback:
+   - Success toasts
+   - Error messages
+   - Confirmation dialogs for destructive actions
+   - Helpful tooltips
+
+Test the entire user journey from both production professional and property owner perspectives.
+```
+
+---
+
+# **PHASE 13: TESTING & DEPLOYMENT**
+
+## Step 13.1: Testing Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Set up testing and quality assurance:
+
+1. Create test data:
+   - Add 20+ sample properties with diverse types
+   - Create test accounts for each user type
+   - Generate sample inquiries and conversations
+
+2. Manual testing checklist:
+   - Test complete user registration flow
+   - Test property listing submission to approval
+   - Test search with various filter combinations
+   - Test inquiry submission and response
+   - Test saved locations and collections
+   - Test saved searches and alerts
+   - Test admin approval workflow
+   - Test all forms with invalid data
+   - Test with slow internet connection
+   - Test on multiple browsers
+
+3. Security audit:
+   - Check all API routes have proper authentication
+   - Verify user can only access their own data
+   - Test SQL injection prevention
+   - Test XSS prevention
+   - Verify password hashing
+   - Check file upload security
+
+4. Performance testing:
+   - Test with 100+ properties loaded
+   - Check page load speeds
+   - Test image loading performance
+   - Check database query performance
+
+Create a testing checklist document with results.
+```
+
+## Step 13.2: Deployment Preparation Prompt
+
+**Copy-paste this into Replit AI:**
+```
+Prepare the application for production deployment:
+
+1. Environment variables setup:
+   - Create .env.example file listing all required variables
+   - Document each environment variable
+   - Set up production environment variables in hosting
+
+2. Production optimizations:
+   - Enable production mode
+   - Set up error monitoring (Sentry)
+   - Configure CDN for static assets
+   - Set up database connection pooling
+   - Enable gzip compression
+   - Set security headers
+
+3. Create deployment documentation:
+   - Required environment variables
+   - Database setup instructions
+   - Third-party service setup (Cloudinary, Google Maps)
+   - Post-deployment checklist
+
+4. Set up monitoring:
+   - Application performance monitoring
+   - Error tracking
+   - Database query monitoring
+   - Uptime monitoring
+
+5. Backup strategy:
+   - Database backup schedule
+   - User-uploaded images backup
+   - Disaster recovery plan
+
+Document all deployment steps clearly.
+```
+
+## Step 13.3: Deploy to Vercel
+
+**Manual Action:**
+
+1. **In Replit:**
+   - Ensure all code is committed
+   - Test everything works locally
+
+2. **Connect to Vercel:**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign up/login with GitHub
+   - Click "Add New Project"
+   - Import your Replit repository (or connect GitHub)
+
+3. **Configure Vercel:**
+   - Set all environment variables in Vercel dashboard
+   - Configure domain (custom or vercel subdomain)
+   - Set build settings (auto-detected for Next.js)
+
+4. **Deploy:**
+   - Click "Deploy"
+   - Wait for build to complete
+   - Test production site
+
+5. **Post-deployment:**
+   - Run database migrations in production
+   - Add seed data if needed
+   - Test all functionality
+   - Monitor error logs
+
+---
+
+# **PHASE 14: POST-LAUNCH TASKS**
+
+## Step 14.1: Final Configuration
+
+**Copy-paste this into Replit AI:**
+```
+Complete these post-launch configurations:
+
+1. Set up email service:
+   - Configure SendGrid or AWS SES
+   - Set up email templates
+   - Test all automated emails:
+     * Registration confirmation
+     * Password reset
+     * New inquiry notification
+     * Inquiry response notification
+     * Property approval/rejection
+     * Saved search alerts
+
+2. Configure Google Analytics:
+   - Add GA4 tracking code
+   - Set up conversion goals
+   - Configure events:
+     * Property views
+     * Inquiries submitted
+     * User registrations
+     * Searches performed
+
+3. Set up backup system:
+   - Automated daily database backups
+   - Weekly full backups
+   - Test restore process
+
+4. Create admin user:
+   - Set up initial admin account
+   - Document admin credentials securely
+
+5. Create user documentation:
+   - User guide for production professionals
+   - User guide for property owners
+   - Admin manual
+   - FAQ content
+
+Everything should be production-ready and documented.
