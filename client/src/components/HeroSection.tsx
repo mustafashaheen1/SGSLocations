@@ -3,11 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
 
-interface HeroSectionProps {
-  backgroundImage: string;
-}
-
-export default function HeroSection({ backgroundImage }: HeroSectionProps) {
+export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
@@ -16,13 +12,17 @@ export default function HeroSection({ backgroundImage }: HeroSectionProps) {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Video with Overlay */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={backgroundImage}
-          alt="Dallas Fort Worth skyline"
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="w-full h-full object-cover"
-        />
+        >
+          <source src="https://imagelocations.com/video/versace-evo-short.mp4" type="video/mp4" />
+        </video>
         {/* Dark gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       </div>

@@ -9,7 +9,6 @@ import StatisticsBanner from '@/components/StatisticsBanner';
 import DualCTA from '@/components/DualCTA';
 
 // Import images
-import heroImage from '@assets/generated_images/Dallas_Fort_Worth_skyline_hero_75a25901.png';
 import estateImage from '@assets/generated_images/Modern_luxury_estate_property_d456a1cb.png';
 import ranchImage from '@assets/generated_images/Texas_ranch_property_landscape_79ad12da.png';
 import loftImage from '@assets/generated_images/Industrial_urban_loft_space_9c11782a.png';
@@ -98,7 +97,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <HeroSection backgroundImage={heroImage} />
+        <HeroSection />
         <FeaturedLocations properties={mockProperties} />
         <BrowseByCategory categories={mockCategories} />
         <ClientShowcase clients={mockClients} />
