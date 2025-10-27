@@ -36,30 +36,30 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link href="/locations">
-                  <a className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block" data-testid="link-footer-locations">
+                  <span className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block cursor-pointer" data-testid="link-footer-locations">
                     Browse Locations
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/list-property">
-                  <a className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block" data-testid="link-footer-list">
+                  <span className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block cursor-pointer" data-testid="link-footer-list">
                     List Your Property
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/about">
-                  <a className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block" data-testid="link-footer-about">
+                  <span className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block cursor-pointer" data-testid="link-footer-about">
                     About Us
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/contact">
-                  <a className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block" data-testid="link-footer-contact">
+                  <span className="text-sm text-muted-foreground hover:text-foreground hover-elevate px-2 py-1 rounded-lg inline-block cursor-pointer" data-testid="link-footer-contact">
                     Contact
-                  </a>
+                  </span>
                 </Link>
               </li>
             </ul>
