@@ -395,11 +395,13 @@ export default function SearchPage() {
                     {/* Dropdown Panel */}
                     {isOpen && (
                       <div
-                        className="absolute top-full mt-2 bg-white rounded shadow-lg border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
+                        className="absolute top-full mt-2 bg-white rounded overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
                         style={{ 
                           width: '300px',
                           maxHeight: '400px',
-                          zIndex: 50
+                          zIndex: 50,
+                          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                          border: '1px solid #e5e7eb'
                         }}
                         data-testid={`dropdown-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                       >
