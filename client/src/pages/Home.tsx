@@ -7,6 +7,7 @@ import ClientShowcase from '@/components/ClientShowcase';
 import ServicesOverview from '@/components/ServicesOverview';
 import StatisticsBanner from '@/components/StatisticsBanner';
 import DualCTA from '@/components/DualCTA';
+import PageLoader from '@/components/PageLoader';
 
 // Import images
 import estateImage from '@assets/generated_images/Modern_luxury_estate_property_d456a1cb.png';
@@ -104,18 +105,21 @@ const mockClients = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <HeroSection />
-        <FeaturedLocations properties={mockProperties} />
-        <BrowseByCategory categories={mockCategories} />
-        <ClientShowcase clients={mockClients} />
-        <ServicesOverview />
-        <StatisticsBanner />
-        <DualCTA />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <PageLoader />
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <HeroSection />
+          <FeaturedLocations properties={mockProperties} />
+          <BrowseByCategory categories={mockCategories} />
+          <ClientShowcase clients={mockClients} />
+          <ServicesOverview />
+          <StatisticsBanner />
+          <DualCTA />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 }
