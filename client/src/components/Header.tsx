@@ -9,7 +9,6 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   
-  // Check if we're on the homepage
   const isHomepage = location === '/';
 
   const handleSearch = () => {
@@ -30,20 +29,29 @@ export default function Header() {
 
   return (
     <header 
-      className={`relative z-50 w-full ${isHomepage ? '' : 'bg-white'}`}
+      className="relative z-50 w-full"
       style={{ 
-        background: isHomepage ? 'transparent' : undefined,
-        backgroundColor: isHomepage ? 'transparent !important' : '#ffffff',
+        background: isHomepage ? 'transparent' : '#ffffff',
         borderBottom: isHomepage ? 'none' : '1px solid #e5e7eb'
       }}
     >
-      <div className="w-full">
+      <div 
+        className="w-full"
+        style={{ 
+          background: isHomepage ? 'transparent' : undefined
+        }}
+      >
         {/* TOP ROW: Logo + Search */}
-        <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
+        <div 
+          className="flex items-center justify-between px-5" 
+          style={{ 
+            height: '60px',
+            background: isHomepage ? 'transparent' : undefined
+          }}
+        >
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-3 cursor-pointer" data-testid="link-home">
-              {/* Red Circular Icon */}
               <div 
                 className="flex items-center justify-center rounded-full flex-shrink-0"
                 style={{ 
@@ -67,7 +75,6 @@ export default function Header() {
                 </svg>
               </div>
               
-              {/* Logo Text */}
               <span 
                 className="text-xl font-bold" 
                 style={{ 
@@ -92,7 +99,7 @@ export default function Header() {
             <Input
               type="search"
               placeholder="Search locations..."
-              className={`border-0 focus-visible:ring-0 h-10 px-4 flex-1 ${isHomepage ? 'search-input-homepage' : 'search-input-other'}`}
+              className="border-0 focus-visible:ring-0 h-10 px-4 flex-1"
               style={{
                 backgroundColor: isHomepage ? 'rgba(0, 0, 0, 0.2)' : '#f3f4f6',
                 color: isHomepage ? '#ffffff' : '#1f2937',
@@ -142,6 +149,7 @@ export default function Header() {
           className="hidden md:flex items-center justify-center gap-3 border-t" 
           style={{ 
             height: '50px',
+            background: isHomepage ? 'transparent' : undefined,
             borderColor: isHomepage ? 'rgba(255, 255, 255, 0.1)' : '#d1d5db'
           }}
         >
@@ -188,25 +196,20 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* Mobile Slide-in Menu */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <>
-          {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/50 z-40 md:hidden"
             onClick={() => setMobileMenuOpen(false)}
             data-testid="mobile-menu-backdrop"
           />
           
-          {/* Slide-in Menu */}
           <div 
             className="fixed top-0 right-0 h-full w-80 bg-gray-900 z-50 overflow-y-auto md:hidden shadow-2xl"
-            style={{
-              animation: 'slideInRight 0.3s ease-out'
-            }}
+            style={{ animation: 'slideInRight 0.3s ease-out' }}
             data-testid="mobile-menu"
           >
-            {/* Close Button */}
             <div className="flex items-center justify-between p-5 border-b border-white/10">
               <span className="text-white font-bold text-lg">MENU</span>
               <Button
@@ -220,7 +223,6 @@ export default function Header() {
               </Button>
             </div>
 
-            {/* Mobile Navigation Items */}
             <nav className="flex flex-col py-4">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
@@ -241,12 +243,8 @@ export default function Header() {
 
       <style>{`
         @keyframes slideInRight {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(0);
-          }
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
         }
       `}</style>
     </header>
