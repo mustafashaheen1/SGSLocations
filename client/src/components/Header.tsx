@@ -142,33 +142,45 @@ export default function Header() {
             borderColor: isHomepage ? 'rgba(255, 255, 255, 0.1)' : '#d1d5db'
           }}
         >
-          {navItems.map((item, index) => (
-            <div key={item.href} className="flex items-center gap-3">
-              <Link href={item.href}>
-                <span 
-                  className={`cursor-pointer transition-all ${isHomepage ? 'hover:brightness-125' : 'hover:brightness-75'}`}
-                  style={{ 
-                    fontSize: '13px', 
-                    letterSpacing: '0.5px',
-                    color: isHomepage ? '#ffffff' : '#1f2937'
-                  }} 
-                  data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-              {index < navItems.length - 1 && (
-                <span 
-                  style={{ 
-                    fontSize: '13px',
-                    color: isHomepage ? 'rgba(255, 255, 255, 0.4)' : '#9ca3af'
-                  }}
-                >
-                  |
-                </span>
-              )}
-            </div>
-          ))}
+          {navItems.map((item, index) => {
+            const isActive = location === item.href;
+            return (
+              <div key={item.href} className="flex items-center gap-3">
+                <Link href={item.href}>
+                  <span 
+                    className="cursor-pointer relative inline-block"
+                    style={{ 
+                      fontSize: '13px', 
+                      letterSpacing: '0.5px',
+                      color: isHomepage ? '#ffffff' : '#374151',
+                      transition: 'color 200ms ease',
+                      borderBottom: isActive ? (isHomepage ? '2px solid #ffffff' : '2px solid #dc2626') : '2px solid transparent',
+                      paddingBottom: '2px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = isHomepage ? 'rgba(255, 255, 255, 0.8)' : '#1f2937';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = isHomepage ? '#ffffff' : '#374151';
+                    }}
+                    data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+                {index < navItems.length - 1 && (
+                  <span 
+                    style={{ 
+                      fontSize: '13px',
+                      color: isHomepage ? 'rgba(255, 255, 255, 0.4)' : '#9ca3af'
+                    }}
+                  >
+                    |
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </nav>
       </div>
 
