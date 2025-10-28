@@ -31,6 +31,7 @@ export default function SearchPage() {
   const [dropdownSearchInputs, setDropdownSearchInputs] = useState<Record<string, string>>({});
   const [dropdownSearches, setDropdownSearches] = useState<Record<string, string>>({});
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load filters from URL on mount
   useEffect(() => {
@@ -91,6 +92,16 @@ export default function SearchPage() {
     if (window.location.pathname + window.location.search !== newUrl) {
       window.history.pushState({}, '', newUrl);
     }
+  }, [selectedFilters]);
+
+  // Simulate loading when filters change
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, [selectedFilters]);
 
   // Property images array
@@ -412,6 +423,7 @@ export default function SearchPage() {
                               count={option.count}
                               defaultChecked={selectedFilters[filter]?.has(option.label) || false}
                               onChange={(checked) => handleDropdownFilterToggle(filter, option.label, checked)}
+                              disabled={isLoading}
                             />
                           ))}
                         </div>
@@ -480,6 +492,7 @@ export default function SearchPage() {
                   count={filter.count}
                   defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
                   onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
+                  disabled={isLoading}
                 />
               ))}
             </div>
@@ -532,6 +545,7 @@ export default function SearchPage() {
                           count={option.count}
                           defaultChecked={selectedFilters[filter]?.has(option.label) || false}
                           onChange={(checked) => handleDropdownFilterToggle(filter, option.label, checked)}
+                          disabled={isLoading}
                         />
                       ))}
                     </div>
@@ -610,6 +624,7 @@ export default function SearchPage() {
                     count={filter.count}
                     defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
                     onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
+                    disabled={isLoading}
                   />
                 ))}
               </div>
@@ -635,6 +650,7 @@ export default function SearchPage() {
                         variant="outline"
                         size="sm"
                         className="text-xs md:text-sm"
+                        disabled={isLoading}
                         data-testid="button-sort"
                       >
                         Relevance
@@ -643,25 +659,39 @@ export default function SearchPage() {
                   </div>
 
                   {/* Results Grid - 1 column mobile, 3 columns desktop */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                    {propertyImages.map((image, i) => (
-                      <div
-                        key={i}
-                        className="rounded overflow-hidden cursor-pointer"
-                        data-testid={`card-property-${i + 1}`}
-                      >
-                        <div className="aspect-[3/2] overflow-hidden">
-                          <img
-                            src={image}
-                            alt={`Property ${i + 1}`}
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                            loading="lazy"
-                            data-testid={`img-property-${i + 1}`}
-                          />
+                  {isLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5" data-testid="loading-skeletons">
+                      {[...Array(12)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="rounded overflow-hidden"
+                          data-testid={`skeleton-card-${i + 1}`}
+                        >
+                          <div className="aspect-[3/2] bg-gray-200 animate-pulse" />
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 animate-in fade-in duration-300">
+                      {propertyImages.map((image, i) => (
+                        <div
+                          key={i}
+                          className="rounded overflow-hidden cursor-pointer"
+                          data-testid={`card-property-${i + 1}`}
+                        >
+                          <div className="aspect-[3/2] overflow-hidden">
+                            <img
+                              src={image}
+                              alt={`Property ${i + 1}`}
+                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                              loading="lazy"
+                              data-testid={`img-property-${i + 1}`}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Pagination */}
                   <div className="flex justify-center items-center mt-8 mb-6">

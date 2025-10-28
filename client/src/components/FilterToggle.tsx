@@ -5,13 +5,15 @@ interface FilterToggleProps {
   count?: number;
   defaultChecked?: boolean;
   onChange?: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
 export default function FilterToggle({ 
   label, 
   count, 
   defaultChecked = false,
-  onChange 
+  onChange,
+  disabled = false
 }: FilterToggleProps) {
   const [isChecked, setIsChecked] = useState(defaultChecked);
 
@@ -21,6 +23,7 @@ export default function FilterToggle({
   }, [defaultChecked]);
 
   const handleToggle = () => {
+    if (disabled) return;
     const newValue = !isChecked;
     setIsChecked(newValue);
     onChange?.(newValue);
@@ -28,7 +31,9 @@ export default function FilterToggle({
 
   return (
     <div
-      className="flex items-center justify-between cursor-pointer hover:bg-gray-50 px-4 transition-colors"
+      className={`flex items-center justify-between px-4 transition-colors ${
+        disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'
+      }`}
       style={{ height: '44px' }}
       onClick={handleToggle}
       data-testid={`filter-toggle-${label.toLowerCase().replace(/\s+/g, '-')}`}
