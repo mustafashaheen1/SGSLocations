@@ -63,22 +63,22 @@ export default function SearchPage() {
     handleFilterToggle(category, label, false);
   };
 
-  // Sidebar filters with counts
+  // Sidebar filters with counts and category mapping
   const sidebarFilters = [
-    { label: 'New', count: 245 },
-    { label: 'Modern', count: 512 },
-    { label: 'Pool', count: 234 },
-    { label: 'Kitchen', count: 678 },
-    { label: 'Americana', count: 123 },
-    { label: 'Views', count: 389 },
-    { label: 'Bathroom', count: 543 },
-    { label: 'Retro', count: 156 },
-    { label: 'Driveway', count: 445 },
-    { label: 'Mediterranean', count: 98 },
-    { label: 'Event Locations', count: 167 },
-    { label: 'Spanish', count: 203 },
-    { label: 'Architectural', count: 287 },
-    { label: 'Mid-Century Modern', count: 178 },
+    { label: 'New', count: 245, category: 'Categories' },
+    { label: 'Modern', count: 512, category: 'Categories' },
+    { label: 'Pool', count: 234, category: 'Pool' },
+    { label: 'Kitchen', count: 678, category: 'Access' },
+    { label: 'Americana', count: 123, category: 'Categories' },
+    { label: 'Views', count: 389, category: 'Access' },
+    { label: 'Bathroom', count: 543, category: 'Access' },
+    { label: 'Retro', count: 156, category: 'Categories' },
+    { label: 'Driveway', count: 445, category: 'Access' },
+    { label: 'Mediterranean', count: 98, category: 'Categories' },
+    { label: 'Event Locations', count: 167, category: 'Categories' },
+    { label: 'Spanish', count: 203, category: 'Categories' },
+    { label: 'Architectural', count: 287, category: 'Categories' },
+    { label: 'Mid-Century Modern', count: 178, category: 'Categories' },
   ];
 
   const filterButtons = [
@@ -98,6 +98,12 @@ export default function SearchPage() {
     setOpenDropdown(openDropdown === filter ? null : filter);
   };
 
+  // Close dropdown when a filter is selected
+  const handleDropdownFilterToggle = (category: string, label: string, checked: boolean) => {
+    handleFilterToggle(category, label, checked);
+    // Keep dropdown open for multiple selections - user can click outside to close
+  };
+
   // Filter data for different categories
   const getFilterOptions = (filterName: string) => {
     const options: Record<string, Array<{ label: string; count: number }>> = {
@@ -107,6 +113,16 @@ export default function SearchPage() {
         { label: 'Natural', count: 289 },
         { label: 'Industrial', count: 156 },
         { label: 'Historical', count: 98 },
+        // Include sidebar filters that map to Categories
+        { label: 'New', count: 245 },
+        { label: 'Modern', count: 512 },
+        { label: 'Americana', count: 123 },
+        { label: 'Retro', count: 156 },
+        { label: 'Mediterranean', count: 98 },
+        { label: 'Event Locations', count: 167 },
+        { label: 'Spanish', count: 203 },
+        { label: 'Architectural', count: 287 },
+        { label: 'Mid-Century Modern', count: 178 },
       ],
       'Permits': [
         { label: 'Film Permit Available', count: 542 },
@@ -136,6 +152,11 @@ export default function SearchPage() {
         { label: 'Private Parking', count: 398 },
         { label: 'Gated Community', count: 234 },
         { label: 'Public Access', count: 456 },
+        // Include sidebar filters that map to Access
+        { label: 'Kitchen', count: 678 },
+        { label: 'Views', count: 389 },
+        { label: 'Bathroom', count: 543 },
+        { label: 'Driveway', count: 445 },
       ],
       'Floors': [
         { label: 'Single Story', count: 345 },
@@ -152,6 +173,7 @@ export default function SearchPage() {
       'Pool': [
         { label: 'Yes', count: 377 },
         { label: 'No', count: 456 },
+        { label: 'Pool', count: 234 },
       ],
       'Walls': [
         { label: 'Brick', count: 312 },
@@ -256,7 +278,7 @@ export default function SearchPage() {
                               label={option.label}
                               count={option.count}
                               defaultChecked={selectedFilters[filter]?.has(option.label) || false}
-                              onChange={(checked) => handleFilterToggle(filter, option.label, checked)}
+                              onChange={(checked) => handleDropdownFilterToggle(filter, option.label, checked)}
                             />
                           ))}
                         </div>
@@ -333,8 +355,8 @@ export default function SearchPage() {
                     key={filter.label}
                     label={filter.label}
                     count={filter.count}
-                    defaultChecked={selectedFilters['Sidebar']?.has(filter.label) || false}
-                    onChange={(checked) => handleFilterToggle('Sidebar', filter.label, checked)}
+                    defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
+                    onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
                   />
                 ))}
               </div>
