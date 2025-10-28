@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import { Search, ChevronDown, SlidersHorizontal, X, SearchX } from 'lucide-react';
 import FilterToggle from '@/components/FilterToggle';
 
 // Import property images
@@ -130,6 +130,16 @@ export default function SearchPage() {
   const removeFilter = (category: string, label: string) => {
     handleFilterToggle(category, label, false);
   };
+
+  const clearAllFilters = () => {
+    setSelectedFilters({});
+    setIsMobileDrawerOpen(false);
+  };
+
+  // Simulate filtered results - in real app, this would filter based on selectedFilters
+  // For demo purposes, show empty state when certain filters are selected
+  const hasResults = !(selectedFilters['Categories']?.has('Industrial') && selectedFilters['City']?.has('Denton'));
+  const resultsCount = hasResults ? 65 : 0;
 
   // Sidebar filters with counts and category mapping
   const allSidebarFilters = [
@@ -611,49 +621,51 @@ export default function SearchPage() {
               style={{ maxHeight: 'calc(100vh - 300px)' }}
               data-testid="main-content"
             >
-              {/* Results Header */}
-              <div className="flex items-center justify-between mb-4 md:mb-6">
-                <h2 className="text-lg md:text-xl font-semibold text-gray-900" data-testid="text-results-count">
-                  65 Locations Found
-                </h2>
-                
-                <div className="flex items-center gap-2 md:gap-3">
-                  <span className="text-xs md:text-sm text-gray-600 hidden sm:inline">Sort by:</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs md:text-sm"
-                    data-testid="button-sort"
-                  >
-                    Relevance
-                  </Button>
-                </div>
-              </div>
-
-              {/* Results Grid - 1 column mobile, 3 columns desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-                {propertyImages.map((image, i) => (
-                  <div
-                    key={i}
-                    className="rounded overflow-hidden cursor-pointer"
-                    data-testid={`card-property-${i + 1}`}
-                  >
-                    <div className="aspect-[3/2] overflow-hidden">
-                      <img
-                        src={image}
-                        alt={`Property ${i + 1}`}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                        loading="lazy"
-                        data-testid={`img-property-${i + 1}`}
-                      />
+              {hasResults ? (
+                <>
+                  {/* Results Header */}
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-900" data-testid="text-results-count">
+                      {resultsCount} Locations Found
+                    </h2>
+                    
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <span className="text-xs md:text-sm text-gray-600 hidden sm:inline">Sort by:</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs md:text-sm"
+                        data-testid="button-sort"
+                      >
+                        Relevance
+                      </Button>
                     </div>
                   </div>
-                ))}
-              </div>
 
-              {/* Pagination */}
-              <div className="flex justify-center items-center mt-8 mb-6">
-                <div className="flex items-center gap-2">
+                  {/* Results Grid - 1 column mobile, 3 columns desktop */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                    {propertyImages.map((image, i) => (
+                      <div
+                        key={i}
+                        className="rounded overflow-hidden cursor-pointer"
+                        data-testid={`card-property-${i + 1}`}
+                      >
+                        <div className="aspect-[3/2] overflow-hidden">
+                          <img
+                            src={image}
+                            alt={`Property ${i + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            loading="lazy"
+                            data-testid={`img-property-${i + 1}`}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex justify-center items-center mt-8 mb-6">
+                    <div className="flex items-center gap-2">
                   {/* First Page */}
                   <button
                     onClick={() => setCurrentPage(1)}
@@ -705,8 +717,35 @@ export default function SearchPage() {
                   >
                     »
                   </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* Empty State */
+                <div className="flex flex-col items-center justify-center py-16 md:py-24 px-4" data-testid="empty-state">
+                  <div className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-100 mb-6">
+                    <SearchX className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
+                  </div>
+                  
+                  <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2 text-center" data-testid="text-empty-title">
+                    No locations found
+                  </h3>
+                  
+                  <p className="text-sm md:text-base text-gray-600 mb-6 text-center max-w-md" data-testid="text-empty-description">
+                    Try adjusting your filters to see more results
+                  </p>
+                  
+                  <Button
+                    onClick={clearAllFilters}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                    data-testid="button-clear-all-filters"
+                  >
+                    <X className="w-4 h-4" />
+                    Clear All Filters
+                  </Button>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
