@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Menu, X, Search, User, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
@@ -11,24 +12,79 @@ import {
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // todo: remove mock functionality
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    console.log('Search triggered:', searchQuery);
+  };
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 w-full">
-      <div className="container mx-auto px-4">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
-          <Link href="/">
-            <div className="flex items-center space-x-2 hover-elevate rounded-lg px-3 py-2 -ml-3 cursor-pointer" data-testid="link-home">
-              <div className="flex items-center">
-                <span className="text-2xl font-bold text-primary">SGS</span>
-                <span className="ml-2 text-xl font-semibold text-white">Locations</span>
+    <header className="sticky top-0 z-50 w-full" style={{ backgroundColor: '#1e3a5f' }}>
+      {/* Desktop Layout */}
+      <div className="hidden md:block">
+        <div className="container mx-auto px-4">
+          {/* Top Row: Logo + Search Bar */}
+          <div className="flex items-center justify-between py-4 border-b border-white/10">
+            {/* Logo */}
+            <Link href="/">
+              <div className="hover-elevate rounded-lg px-3 py-2 -ml-3 cursor-pointer" data-testid="link-home">
+                <span className="text-2xl font-bold text-white tracking-wide">SGS LOCATIONS</span>
               </div>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+            {/* Search Bar + Actions */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 w-96">
+                <Search className="h-4 w-4 text-white/60" />
+                <Input
+                  type="search"
+                  placeholder="Search locations..."
+                  className="border-0 bg-transparent text-white placeholder:text-white/60 focus-visible:ring-0 h-8 p-0"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  data-testid="input-header-search"
+                />
+              </div>
+
+              {isLoggedIn ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="gap-2 text-white hover:text-white hover:bg-white/10" data-testid="button-user-menu">
+                      <User className="h-5 w-5" />
+                      <span>Account</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem data-testid="menu-item-dashboard">
+                      Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem data-testid="menu-item-saved-locations">
+                      Saved Locations
+                    </DropdownMenuItem>
+                    <DropdownMenuItem data-testid="menu-item-inquiries">
+                      Inquiries
+                    </DropdownMenuItem>
+                    <DropdownMenuItem data-testid="menu-item-settings">
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem data-testid="menu-item-signout" onClick={() => setIsLoggedIn(false)}>
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button variant="default" data-testid="button-signin" onClick={() => setIsLoggedIn(true)}>
+                  Sign In
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom Row: Centered Navigation */}
+          <nav className="flex items-center justify-center gap-8 py-4">
             <Link href="/locations">
               <span className="text-base font-medium text-white hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-search">
                 Search
@@ -50,116 +106,103 @@ export default function Header() {
               </span>
             </Link>
             <Link href="/list-property">
-              <span className="text-base font-medium text-primary hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-list-property">
+              <span className="text-base font-medium text-white hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-list-property">
                 List Your Property
               </span>
             </Link>
           </nav>
+        </div>
+      </div>
 
-          {/* Right Side Actions */}
-          <div className="hidden md:flex items-center gap-3">
+      {/* Mobile Layout */}
+      <div className="md:hidden">
+        <div className="container mx-auto px-4">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/">
+              <div className="cursor-pointer" data-testid="link-home-mobile">
+                <span className="text-lg font-bold text-white tracking-wide">SGS LOCATIONS</span>
+              </div>
+            </Link>
+
+            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-white"
-              data-testid="button-search"
-              onClick={() => console.log('Search triggered')}
+              className="text-white hover:text-white hover:bg-white/10"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              data-testid="button-mobile-menu"
             >
-              <Search className="h-5 w-5" />
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
-
-            {isLoggedIn ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="gap-2 text-white hover:text-white" data-testid="button-user-menu">
-                    <User className="h-5 w-5" />
-                    <span>Account</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem data-testid="menu-item-dashboard">
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem data-testid="menu-item-saved-locations">
-                    Saved Locations
-                  </DropdownMenuItem>
-                  <DropdownMenuItem data-testid="menu-item-inquiries">
-                    Inquiries
-                  </DropdownMenuItem>
-                  <DropdownMenuItem data-testid="menu-item-settings">
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuItem data-testid="menu-item-signout" onClick={() => setIsLoggedIn(false)}>
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button variant="default" data-testid="button-signin" onClick={() => setIsLoggedIn(true)}>
-                Sign In
-              </Button>
-            )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-white hover:text-white"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            data-testid="button-mobile-menu"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="pb-6 space-y-3">
+              {/* Mobile Search */}
+              <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
+                <Search className="h-4 w-4 text-white/60" />
+                <Input
+                  type="search"
+                  placeholder="Search locations..."
+                  className="border-0 bg-transparent text-white placeholder:text-white/60 focus-visible:ring-0 h-8 p-0"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  data-testid="input-mobile-search"
+                />
+              </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden pb-6 space-y-2 bg-black/80 backdrop-blur-sm rounded-lg mt-4">
-            <Link href="/locations">
-              <span className="block text-xl font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-search">
-                Search
-              </span>
-            </Link>
-            <Link href="/categories">
-              <span className="block text-xl font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-categories">
-                Categories
-              </span>
-            </Link>
-            <Link href="/about">
-              <span className="block text-xl font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-about">
-                About
-              </span>
-            </Link>
-            <Link href="/contact">
-              <span className="block text-xl font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-contact">
-                Contact
-              </span>
-            </Link>
-            <Link href="/list-property">
-              <span className="block text-xl font-medium text-primary py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-list-property">
-                List Your Property
-              </span>
-            </Link>
-            <div className="pt-4 space-y-2">
-              {!isLoggedIn ? (
-                <Button className="w-full" data-testid="button-mobile-signin" onClick={() => setIsLoggedIn(true)}>
-                  Sign In
-                </Button>
-              ) : (
-                <>
-                  <Button variant="outline" className="w-full" data-testid="button-mobile-dashboard">
-                    Dashboard
+              {/* Mobile Navigation */}
+              <div className="space-y-1">
+                <Link href="/locations">
+                  <span className="block text-base font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-search">
+                    Search
+                  </span>
+                </Link>
+                <Link href="/categories">
+                  <span className="block text-base font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-categories">
+                    Categories
+                  </span>
+                </Link>
+                <Link href="/about">
+                  <span className="block text-base font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-about">
+                    About
+                  </span>
+                </Link>
+                <Link href="/contact">
+                  <span className="block text-base font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-contact">
+                    Contact
+                  </span>
+                </Link>
+                <Link href="/list-property">
+                  <span className="block text-base font-medium text-white py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-list-property">
+                    List Your Property
+                  </span>
+                </Link>
+              </div>
+
+              {/* Mobile Actions */}
+              <div className="pt-2">
+                {!isLoggedIn ? (
+                  <Button className="w-full" data-testid="button-mobile-signin" onClick={() => setIsLoggedIn(true)}>
+                    Sign In
                   </Button>
-                  <Button variant="ghost" className="w-full" data-testid="button-mobile-signout" onClick={() => setIsLoggedIn(false)}>
-                    Sign Out
-                  </Button>
-                </>
-              )}
+                ) : (
+                  <div className="space-y-2">
+                    <Button variant="outline" className="w-full text-white border-white/20 hover:bg-white/10" data-testid="button-mobile-dashboard">
+                      Dashboard
+                    </Button>
+                    <Button variant="ghost" className="w-full text-white hover:bg-white/10" data-testid="button-mobile-signout" onClick={() => setIsLoggedIn(false)}>
+                      Sign Out
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );
