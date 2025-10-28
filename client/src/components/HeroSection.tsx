@@ -87,9 +87,8 @@ export default function HeroSection() {
       <div className="relative z-20 flex flex-col items-center justify-center h-full px-4 text-center">
         {/* Main Heading */}
         <h1 
-          className="font-bold text-white mb-5"
+          className="font-bold text-white mb-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
           style={{ 
-            fontSize: '60px',
             textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'
           }}
           data-testid="hero-heading"
@@ -99,9 +98,8 @@ export default function HeroSection() {
 
         {/* Subheading */}
         <p 
-          className="text-white mb-10"
+          className="text-white mb-10 text-base sm:text-lg md:text-xl lg:text-2xl px-4"
           style={{ 
-            fontSize: '24px',
             textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'
           }}
           data-testid="hero-subheading"
@@ -110,10 +108,10 @@ export default function HeroSection() {
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 w-full px-4 sm:w-auto">
           <Button
             size="lg"
-            className="font-semibold"
+            className="font-semibold w-full sm:w-auto"
             style={{ 
               height: '50px',
               backgroundColor: '#dc2626',
@@ -130,7 +128,7 @@ export default function HeroSection() {
           <Button
             size="lg"
             variant="outline"
-            className="font-semibold text-white border-2 border-white hover:bg-white/10"
+            className="font-semibold text-white border-2 border-white hover:bg-white/10 w-full sm:w-auto"
             style={{ 
               height: '50px',
               fontSize: '16px',
@@ -146,9 +144,8 @@ export default function HeroSection() {
 
         {/* Hero Search Bar */}
         <div 
-          className="flex items-center bg-white rounded-lg overflow-hidden mt-10"
+          className="flex items-center bg-white rounded-lg overflow-hidden mt-10 w-full max-w-[600px] mx-4"
           style={{ 
-            width: '600px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
           }}
         >
