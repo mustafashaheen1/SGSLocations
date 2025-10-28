@@ -30,9 +30,10 @@ export default function Header() {
 
   return (
     <header 
-      className="relative z-50 w-full" 
+      className={`relative z-50 w-full ${isHomepage ? '' : 'bg-white'}`}
       style={{ 
-        backgroundColor: isHomepage ? 'transparent' : '#ffffff',
+        background: isHomepage ? 'transparent' : undefined,
+        backgroundColor: isHomepage ? 'transparent !important' : '#ffffff',
         borderBottom: isHomepage ? 'none' : '1px solid #e5e7eb'
       }}
     >
