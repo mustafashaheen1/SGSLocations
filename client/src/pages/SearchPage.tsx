@@ -6,9 +6,39 @@ import { Button } from '@/components/ui/button';
 import { Search, ChevronDown } from 'lucide-react';
 import FilterToggle from '@/components/FilterToggle';
 
+// Import property images
+import modernHouse1 from '@assets/stock_images/modern_house_exterio_89fae7f3.jpg';
+import modernHouse2 from '@assets/stock_images/modern_house_exterio_78876c26.jpg';
+import modernHouse3 from '@assets/stock_images/modern_house_exterio_253c0eb1.jpg';
+import luxuryInterior1 from '@assets/stock_images/luxury_home_interior_bdc3498d.jpg';
+import luxuryInterior2 from '@assets/stock_images/luxury_home_interior_0d6459b5.jpg';
+import luxuryInterior3 from '@assets/stock_images/luxury_home_interior_45cda360.jpg';
+import poolBackyard1 from '@assets/stock_images/pool_backyard_1304b63b.jpg';
+import poolBackyard2 from '@assets/stock_images/pool_backyard_52eec0a4.jpg';
+import poolBackyard3 from '@assets/stock_images/pool_backyard_8cc8bd79.jpg';
+import commercialBuilding1 from '@assets/stock_images/commercial_building__6076e6f6.jpg';
+import commercialBuilding2 from '@assets/stock_images/commercial_building__e3dd5a0c.jpg';
+import commercialBuilding3 from '@assets/stock_images/commercial_building__46ce9b88.jpg';
+
 export default function SearchPage() {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, Set<string>>>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  // Property images array
+  const propertyImages = [
+    modernHouse1,
+    modernHouse2,
+    modernHouse3,
+    luxuryInterior1,
+    luxuryInterior2,
+    luxuryInterior3,
+    poolBackyard1,
+    poolBackyard2,
+    poolBackyard3,
+    commercialBuilding1,
+    commercialBuilding2,
+    commercialBuilding3,
+  ];
 
   const handleFilterToggle = (category: string, label: string, checked: boolean) => {
     setSelectedFilters(prev => {
@@ -330,19 +360,22 @@ export default function SearchPage() {
                 </div>
               </div>
 
-              {/* Results Grid - Placeholder */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Placeholder cards */}
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+              {/* Results Grid - 3 columns, 20px gap */}
+              <div className="grid grid-cols-3 gap-5">
+                {propertyImages.map((image, i) => (
                   <div
                     key={i}
-                    className="bg-white rounded-lg border border-gray-200 overflow-hidden"
-                    data-testid={`card-result-${i}`}
+                    className="rounded overflow-hidden cursor-pointer"
+                    data-testid={`card-property-${i + 1}`}
                   >
-                    <div className="aspect-[4/3] bg-gray-200" />
-                    <div className="p-4">
-                      <div className="h-6 bg-gray-200 rounded mb-2" />
-                      <div className="h-4 bg-gray-100 rounded w-2/3" />
+                    <div className="aspect-[3/2] overflow-hidden">
+                      <img
+                        src={image}
+                        alt={`Property ${i + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                        data-testid={`img-property-${i + 1}`}
+                      />
                     </div>
                   </div>
                 ))}
