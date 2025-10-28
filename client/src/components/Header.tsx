@@ -31,7 +31,10 @@ export default function Header() {
   return (
     <header 
       className="relative z-50 w-full" 
-      style={{ backgroundColor: isHomepage ? 'rgba(0, 0, 0, 0.3)' : '#ffffff' }}
+      style={{ 
+        backgroundColor: isHomepage ? 'rgba(0, 0, 0, 0.3)' : '#ffffff',
+        borderBottom: isHomepage ? 'none' : '1px solid #e5e7eb'
+      }}
     >
       <div className="w-full">
         {/* TOP ROW: Logo + Search */}
