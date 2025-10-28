@@ -353,7 +353,7 @@ export default function SearchPage() {
         </div>
 
         {/* Mobile Filters Button */}
-        <div className="md:hidden bg-white border-b border-gray-200 py-3 sticky top-[110px] z-40">
+        <div className="md:hidden bg-white border-b border-gray-200 py-3 relative">
           <div className="container mx-auto px-4">
             <Button
               onClick={() => setIsMobileDrawerOpen(true)}
@@ -373,7 +373,7 @@ export default function SearchPage() {
         </div>
 
         {/* Desktop Horizontal Filter Bar */}
-        <div className="hidden md:block bg-white border-b border-gray-200 py-4 sticky top-[110px] z-40">
+        <div className="hidden md:block bg-white border-b border-gray-200 py-4 relative">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               {filterButtons.map((filter) => {
@@ -609,7 +609,6 @@ export default function SearchPage() {
             {isSidebarVisible && (
               <aside 
                 className="hidden md:block w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200 animate-in slide-in-from-left-5 duration-300"
-                style={{ maxHeight: 'calc(100vh - 300px)' }}
                 data-testid="sidebar-filters"
               >
                 {/* Sidebar Search Box */}
@@ -628,7 +627,7 @@ export default function SearchPage() {
                 </div>
 
                 {/* Scrollable Filter List */}
-                <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+                <div className="overflow-y-auto">
                   {sidebarFilters.map((filter) => (
                     <FilterToggle
                       key={filter.label}
@@ -643,11 +642,10 @@ export default function SearchPage() {
               </aside>
             )}
 
-            {/* Main Content Area - Flexible width, scrollable */}
+            {/* Main Content Area - Flexible width */}
             <div 
               ref={mainContentRef}
-              className="flex-1 md:overflow-y-auto scroll-smooth"
-              style={{ maxHeight: 'calc(100vh - 300px)' }}
+              className="flex-1"
               data-testid="main-content"
             >
               {hasResults ? (
