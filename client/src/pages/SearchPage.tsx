@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, ChevronDown } from 'lucide-react';
+import FilterToggle from '@/components/FilterToggle';
 
 export default function SearchPage() {
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
@@ -24,6 +25,76 @@ export default function SearchPage() {
 
   const toggleDropdown = (filter: string) => {
     setOpenDropdown(openDropdown === filter ? null : filter);
+  };
+
+  // Sample filter data for different categories
+  const getFilterOptions = (filterName: string) => {
+    const options: Record<string, Array<{ label: string; count: number }>> = {
+      'Categories': [
+        { label: 'Residential', count: 763 },
+        { label: 'Commercial', count: 412 },
+        { label: 'Industrial', count: 156 },
+        { label: 'Outdoor', count: 289 },
+        { label: 'Historic', count: 98 },
+      ],
+      'Permits': [
+        { label: 'Film Permit Available', count: 542 },
+        { label: 'No Permit Required', count: 321 },
+        { label: 'Special Permit Needed', count: 87 },
+      ],
+      'City': [
+        { label: 'Dallas', count: 425 },
+        { label: 'Fort Worth', count: 312 },
+        { label: 'Arlington', count: 189 },
+        { label: 'Plano', count: 156 },
+        { label: 'Irving', count: 134 },
+      ],
+      'County': [
+        { label: 'Dallas County', count: 634 },
+        { label: 'Tarrant County', count: 478 },
+        { label: 'Denton County', count: 223 },
+        { label: 'Collin County', count: 189 },
+      ],
+      'Access': [
+        { label: 'Street Parking', count: 512 },
+        { label: 'Private Parking', count: 398 },
+        { label: 'Gated Community', count: 234 },
+        { label: 'Public Access', count: 456 },
+      ],
+      'Floors': [
+        { label: 'Single Story', count: 345 },
+        { label: 'Two Story', count: 289 },
+        { label: 'Three Story', count: 156 },
+        { label: '4+ Stories', count: 87 },
+      ],
+      'Patio Balconies': [
+        { label: 'Patio', count: 398 },
+        { label: 'Balcony', count: 267 },
+        { label: 'Terrace', count: 145 },
+        { label: 'Deck', count: 189 },
+      ],
+      'Pool': [
+        { label: 'In-ground Pool', count: 234 },
+        { label: 'Above-ground Pool', count: 98 },
+        { label: 'Infinity Pool', count: 45 },
+        { label: 'No Pool', count: 456 },
+      ],
+      'Walls': [
+        { label: 'Brick', count: 312 },
+        { label: 'Wood', count: 267 },
+        { label: 'Stone', count: 189 },
+        { label: 'Stucco', count: 156 },
+        { label: 'Siding', count: 234 },
+      ],
+      'Yard': [
+        { label: 'Front Yard', count: 512 },
+        { label: 'Back Yard', count: 478 },
+        { label: 'Large Lawn', count: 298 },
+        { label: 'Landscaped', count: 389 },
+        { label: 'Natural/Wild', count: 145 },
+      ],
+    };
+    return options[filterName] || [];
   };
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -105,11 +176,13 @@ export default function SearchPage() {
 
                         {/* Dropdown Content Area (scrollable) */}
                         <div className="overflow-y-auto" style={{ maxHeight: '340px' }}>
-                          <div className="p-4">
-                            <p className="text-sm text-gray-500">
-                              {filter} options will appear here
-                            </p>
-                          </div>
+                          {getFilterOptions(filter).map((option) => (
+                            <FilterToggle
+                              key={option.label}
+                              label={option.label}
+                              count={option.count}
+                            />
+                          ))}
                         </div>
                       </div>
                     )}
