@@ -29,7 +29,7 @@ export default function Header({ transparent = false }: HeaderProps) {
   ];
 
   return (
-    <header className="relative z-50 w-full" style={{ backgroundColor: 'rgba(26, 58, 90, 0.98)' }}>
+    <header className="relative z-50 w-full bg-transparent">
       <div className="w-full">
         {/* TOP ROW: Logo + Search */}
         <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
@@ -61,7 +61,7 @@ export default function Header({ transparent = false }: HeaderProps) {
               </div>
               
               {/* Logo Text */}
-              <span className="text-xl font-bold text-white" style={{ letterSpacing: '1px' }}>
+              <span className="text-xl font-bold text-gray-900" style={{ letterSpacing: '1px' }}>
                 SGS LOCATIONS<sup style={{ fontSize: '10px' }}>®</sup>
               </span>
             </div>
@@ -94,7 +94,7 @@ export default function Header({ transparent = false }: HeaderProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/10"
+              className="text-gray-900 hover:bg-gray-100"
               onClick={() => console.log('Open mobile search')}
               data-testid="button-mobile-search"
             >
@@ -103,7 +103,7 @@ export default function Header({ transparent = false }: HeaderProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/10"
+              className="text-gray-900 hover:bg-gray-100"
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
             >
@@ -114,22 +114,22 @@ export default function Header({ transparent = false }: HeaderProps) {
 
         {/* BOTTOM ROW: Desktop Navigation Menu */}
         <nav 
-          className="hidden md:flex items-center justify-center gap-3 border-t border-white/10" 
+          className="hidden md:flex items-center justify-center gap-3 border-t border-gray-300" 
           style={{ height: '50px' }}
         >
           {navItems.map((item, index) => (
             <div key={item.href} className="flex items-center gap-3">
               <Link href={item.href}>
                 <span 
-                  className="cursor-pointer hover:brightness-125 transition-all" 
-                  style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} 
+                  className="cursor-pointer hover:brightness-75 transition-all text-gray-900" 
+                  style={{ fontSize: '13px', letterSpacing: '0.5px' }} 
                   data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   {item.label}
                 </span>
               </Link>
               {index < navItems.length - 1 && (
-                <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+                <span className="text-gray-400" style={{ fontSize: '13px' }}>|</span>
               )}
             </div>
           ))}
