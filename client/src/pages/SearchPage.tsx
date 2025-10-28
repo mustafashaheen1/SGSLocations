@@ -1,10 +1,35 @@
+import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 
 export default function SearchPage() {
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+
+  const filterButtons = [
+    'Categories',
+    'Permits',
+    'City',
+    'County',
+    'Access',
+    'Floors',
+    'Patio Balconies',
+    'Pool',
+    'Walls',
+    'Yard'
+  ];
+
+  const toggleFilter = (filter: string) => {
+    const newActiveFilters = new Set(activeFilters);
+    if (newActiveFilters.has(filter)) {
+      newActiveFilters.delete(filter);
+    } else {
+      newActiveFilters.add(filter);
+    }
+    setActiveFilters(newActiveFilters);
+  };
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
@@ -42,55 +67,23 @@ export default function SearchPage() {
         {/* Horizontal Filter Bar */}
         <div className="bg-white border-b border-gray-200 py-4 sticky top-[110px] z-40">
           <div className="container mx-auto px-4">
-            <div className="flex items-center gap-3 overflow-x-auto">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 flex-shrink-0"
-                data-testid="button-filters"
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="flex-shrink-0"
-                data-testid="button-filter-category"
-              >
-                Category
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="flex-shrink-0"
-                data-testid="button-filter-location"
-              >
-                Location
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="flex-shrink-0"
-                data-testid="button-filter-price"
-              >
-                Price Range
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="flex-shrink-0"
-                data-testid="button-filter-amenities"
-              >
-                Amenities
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="flex-shrink-0"
-                data-testid="button-filter-availability"
-              >
-                Availability
-              </Button>
+            <div className="flex items-center gap-3 overflow-x-auto pb-2">
+              {filterButtons.map((filter) => {
+                const isActive = activeFilters.has(filter);
+                return (
+                  <button
+                    key={filter}
+                    onClick={() => toggleFilter(filter)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 flex-shrink-0 transition-all hover:border-gray-400 ${
+                      isActive ? 'font-bold text-gray-900 border-gray-500' : 'text-gray-600'
+                    }`}
+                    data-testid={`button-filter-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <span>{filter}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
