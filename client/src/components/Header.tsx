@@ -71,7 +71,8 @@ export default function Header() {
                 className="text-xl font-bold" 
                 style={{ 
                   letterSpacing: '1px',
-                  color: isHomepage ? '#ffffff' : '#1f2937'
+                  color: isHomepage ? '#ffffff' : '#1f2937',
+                  textShadow: isHomepage ? '0 2px 4px rgba(0,0,0,0.5)' : 'none'
                 }}
               >
                 SGS LOCATIONS<sup style={{ fontSize: '10px' }}>®</sup>
@@ -92,8 +93,9 @@ export default function Header() {
               placeholder="Search locations..."
               className={`border-0 focus-visible:ring-0 h-10 px-4 flex-1 ${isHomepage ? 'search-input-homepage' : 'search-input-other'}`}
               style={{
-                backgroundColor: isHomepage ? 'rgba(255, 255, 255, 0.2)' : '#f3f4f6',
-                color: isHomepage ? '#ffffff' : '#1f2937'
+                backgroundColor: isHomepage ? 'rgba(0, 0, 0, 0.2)' : '#f3f4f6',
+                color: isHomepage ? '#ffffff' : '#1f2937',
+                textShadow: isHomepage ? '0 1px 2px rgba(0,0,0,0.3)' : 'none'
               }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -155,7 +157,8 @@ export default function Header() {
                       color: isHomepage ? '#ffffff' : '#374151',
                       transition: 'color 200ms ease',
                       borderBottom: isActive ? (isHomepage ? '2px solid #ffffff' : '2px solid #dc2626') : '2px solid transparent',
-                      paddingBottom: '2px'
+                      paddingBottom: '2px',
+                      textShadow: isHomepage ? '0 2px 4px rgba(0,0,0,0.5)' : 'none'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = isHomepage ? 'rgba(255, 255, 255, 0.8)' : '#1f2937';
