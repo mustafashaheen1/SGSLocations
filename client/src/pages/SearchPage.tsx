@@ -12,30 +12,29 @@ export default function SearchPage() {
       {/* Main Content - Account for fixed header height (110px) */}
       <main className="flex-1 pt-[110px]">
         {/* Image Search Box */}
-        <div className="bg-gray-50 border-b border-gray-200 py-8">
+        <div className="bg-white py-8">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-3xl font-bold mb-6 text-gray-900" data-testid="heading-search">
-                Search Locations
-              </h1>
+            <div 
+              className="border-2 border-dashed border-gray-400 rounded-lg bg-white transition-colors hover:border-gray-600 cursor-pointer flex flex-col items-center justify-center"
+              style={{ height: '150px' }}
+              onClick={() => document.getElementById('image-upload-input')?.click()}
+              data-testid="dropzone-image-search"
+            >
+              <p className="text-lg font-semibold text-gray-700 mb-2" data-testid="text-image-search-title">
+                Search a Location Using An Image As Reference
+              </p>
+              <p className="text-sm text-gray-500" data-testid="text-image-search-instructions">
+                Drag & Drop an image here or click here to select a file
+              </p>
               
-              {/* Search Input */}
-              <div className="flex items-center bg-white rounded-lg overflow-hidden shadow-md border border-gray-300">
-                <Input
-                  type="search"
-                  placeholder="Search by location, property type, or features..."
-                  className="border-0 bg-white text-foreground placeholder:text-muted-foreground focus-visible:ring-0 h-14 px-5 flex-1 text-base"
-                  data-testid="input-search"
-                />
-                <Button
-                  size="icon"
-                  className="h-14 w-14 rounded-none flex-shrink-0"
-                  style={{ backgroundColor: '#dc2626' }}
-                  data-testid="button-search"
-                >
-                  <Search className="h-6 w-6 text-white" />
-                </Button>
-              </div>
+              {/* Hidden file input */}
+              <input
+                type="file"
+                id="image-upload-input"
+                accept="image/*"
+                className="hidden"
+                data-testid="input-image-upload"
+              />
             </div>
           </div>
         </div>
