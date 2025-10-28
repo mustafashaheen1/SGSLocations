@@ -33,11 +33,7 @@ export default function Header() {
 
   const navItems = [
     { href: '/search', label: 'SEARCH' },
-    { href: '/image-search', label: 'IMAGE SEARCH' },
     { href: '/portfolio', label: 'PORTFOLIO' },
-    { href: '/new', label: 'NEW' },
-    { href: '/exclusives', label: 'EXCLUSIVES' },
-    { href: '/events', label: 'EVENTS' },
     { href: '/location-library', label: 'LOCATION LIBRARY' },
     { href: '/about', label: 'ABOUT US' },
     { href: '/contact', label: 'CONTACT' },
