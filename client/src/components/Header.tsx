@@ -67,32 +67,96 @@ export default function Header() {
 
         {/* BOTTOM ROW: Navigation Menu */}
         <nav 
-          className="flex items-center justify-evenly border-t border-white/10" 
+          className="flex items-center justify-center gap-3 border-t border-white/10" 
           style={{ height: '50px' }}
         >
-          <Link href="/locations">
-            <span className="text-sm font-medium text-white hover-elevate px-4 py-2 rounded-lg cursor-pointer inline-block uppercase tracking-wide" data-testid="link-nav-search">
-              Search
+          <Link href="/search">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-search">
+              SEARCH
             </span>
           </Link>
-          <Link href="/categories">
-            <span className="text-sm font-medium text-white hover-elevate px-4 py-2 rounded-lg cursor-pointer inline-block uppercase tracking-wide" data-testid="link-nav-categories">
-              Categories
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/image-search">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-image-search">
+              IMAGE SEARCH
             </span>
           </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/portfolio">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-portfolio">
+              PORTFOLIO
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/new">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-new">
+              NEW
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/exclusives">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-exclusives">
+              EXCLUSIVES
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/events">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-events">
+              EVENTS
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/location-library">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-location-library">
+              LOCATION LIBRARY
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
           <Link href="/about">
-            <span className="text-sm font-medium text-white hover-elevate px-4 py-2 rounded-lg cursor-pointer inline-block uppercase tracking-wide" data-testid="link-nav-about">
-              About
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-about">
+              ABOUT US
             </span>
           </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
           <Link href="/contact">
-            <span className="text-sm font-medium text-white hover-elevate px-4 py-2 rounded-lg cursor-pointer inline-block uppercase tracking-wide" data-testid="link-nav-contact">
-              Contact
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-contact">
+              CONTACT
             </span>
           </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
           <Link href="/list-property">
-            <span className="text-sm font-medium text-white hover-elevate px-4 py-2 rounded-lg cursor-pointer inline-block uppercase tracking-wide" data-testid="link-nav-list-property">
-              List Your Property
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-list-property">
+              LIST YOUR PROPERTY
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/articles">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-articles">
+              ARTICLES
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/login">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-login">
+              LOGIN
+            </span>
+          </Link>
+          <span style={{ color: '#ffffff', fontSize: '13px' }}>|</span>
+          
+          <Link href="/register">
+            <span className="cursor-pointer hover:brightness-125 transition-all" style={{ color: '#ffffff', fontSize: '13px', letterSpacing: '0.5px' }} data-testid="link-nav-register">
+              REGISTER
             </span>
           </Link>
         </nav>
