@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,13 +14,32 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSearch = () => {
     console.log('Search triggered:', searchQuery);
   };
 
+  const headerBgStyle = {
+    backgroundColor: isScrolled ? 'rgba(30, 58, 95, 0.95)' : 'rgba(0, 0, 0, 0.3)',
+    transition: 'background-color 0.3s ease'
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full" style={{ backgroundColor: '#1e3a5f' }}>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full" style={headerBgStyle}>
       {/* Desktop Layout */}
       <div className="hidden md:block">
         <div className="container mx-auto px-4">
