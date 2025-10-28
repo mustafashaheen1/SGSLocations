@@ -1,8 +1,14 @@
 import { Button } from '@/components/ui/button';
+import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
 
 export default function DualCTA() {
+  const { ref, isVisible } = useFadeInOnScroll();
+  
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2">
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      className={`grid grid-cols-1 md:grid-cols-2 fade-in-section ${isVisible ? 'is-visible' : ''}`}
+    >
       {/* Left Side: Production Professionals */}
       <div
         className="relative min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden"

@@ -1,4 +1,5 @@
 import { MapPin, FileText, Camera } from 'lucide-react';
+import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
 
 const services = [
   {
@@ -22,8 +23,12 @@ const services = [
 ];
 
 export default function ServicesOverview() {
+  const { ref, isVisible } = useFadeInOnScroll();
+  
   return (
     <section
+      ref={ref as React.RefObject<HTMLElement>}
+      className={`fade-in-section ${isVisible ? 'is-visible' : ''}`}
       style={{
         backgroundColor: 'rgba(26, 58, 90, 0.98)',
         paddingTop: '80px',

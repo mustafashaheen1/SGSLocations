@@ -1,4 +1,5 @@
 import PropertyCard from './PropertyCard';
+import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
 
 interface Property {
   id: string;
@@ -16,8 +17,14 @@ interface FeaturedLocationsProps {
 }
 
 export default function FeaturedLocations({ properties }: FeaturedLocationsProps) {
+  const { ref, isVisible } = useFadeInOnScroll();
+  
   return (
-    <section className="bg-white" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      className={`bg-white fade-in-section ${isVisible ? 'is-visible' : ''}`} 
+      style={{ paddingTop: '80px', paddingBottom: '80px' }}
+    >
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" data-testid="heading-featured-locations">

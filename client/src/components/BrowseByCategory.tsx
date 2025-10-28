@@ -1,4 +1,5 @@
 import CategoryTile from './CategoryTile';
+import { useFadeInOnScroll } from '@/hooks/useFadeInOnScroll';
 
 interface Category {
   id: string;
@@ -12,8 +13,14 @@ interface BrowseByCategoryProps {
 }
 
 export default function BrowseByCategory({ categories }: BrowseByCategoryProps) {
+  const { ref, isVisible } = useFadeInOnScroll();
+  
   return (
-    <section style={{ backgroundColor: '#f8f9fa', paddingTop: '80px', paddingBottom: '80px' }}>
+    <section 
+      ref={ref as React.RefObject<HTMLElement>}
+      className={`fade-in-section ${isVisible ? 'is-visible' : ''}`}
+      style={{ backgroundColor: '#f8f9fa', paddingTop: '80px', paddingBottom: '80px' }}
+    >
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" data-testid="heading-browse-category">
