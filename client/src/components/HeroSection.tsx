@@ -61,14 +61,20 @@ export default function HeroSection() {
             {fallbackImages.map((image, index) => (
               <div
                 key={image}
-                className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+                className="absolute inset-0 transition-opacity duration-1000"
                 style={{
-                  backgroundImage: `url(${image})`,
                   opacity: index === currentImageIndex ? 1 : 0,
                   zIndex: index === currentImageIndex ? 1 : 0
                 }}
                 data-testid={`hero-fallback-image-${index}`}
-              />
+              >
+                <img 
+                  src={image} 
+                  alt="Location backdrop"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             ))}
           </>
         )}
