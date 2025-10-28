@@ -108,7 +108,7 @@ export default function Home() {
     <>
       <PageLoader />
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <Header transparent />
         <main className="flex-1">
           <HeroSection />
           <FeaturedLocations properties={mockProperties} />

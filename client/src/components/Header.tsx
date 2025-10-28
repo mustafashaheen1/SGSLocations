@@ -1,34 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Menu, X } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  transparent?: boolean;
+}
+
+export default function Header({ transparent = false }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const handleSearch = () => {
     console.log('Search triggered:', searchQuery);
   };
 
   const headerBgStyle = {
-    backgroundColor: isScrolled ? 'rgba(26, 58, 90, 0.98)' : 'rgba(0, 0, 0, 0.3)',
-    transition: 'background-color 0.3s ease'
+    backgroundColor: transparent ? 'rgba(0, 0, 0, 0.3)' : 'rgba(26, 58, 90, 0.98)'
   };
 
   const navItems = [
@@ -44,7 +33,7 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full" style={headerBgStyle}>
+    <header className="relative z-50 w-full" style={headerBgStyle}>
       <div className="w-full">
         {/* TOP ROW: Logo + Search */}
         <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
