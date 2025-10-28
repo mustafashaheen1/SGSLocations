@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -32,6 +32,7 @@ export default function SearchPage() {
   const [dropdownSearches, setDropdownSearches] = useState<Record<string, string>>({});
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const mainContentRef = useRef<HTMLDivElement | null>(null);
 
   // Load filters from URL on mount
   useEffect(() => {
@@ -103,6 +104,13 @@ export default function SearchPage() {
 
     return () => clearTimeout(timer);
   }, [selectedFilters]);
+
+  // Smooth scroll to top when page changes
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentPage]);
 
   // Property images array
   const propertyImages = [
@@ -349,7 +357,7 @@ export default function SearchPage() {
             <Button
               onClick={() => setIsMobileDrawerOpen(true)}
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-gray-400"
               data-testid="button-mobile-filters"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -374,19 +382,19 @@ export default function SearchPage() {
                   <div key={filter} className="relative">
                     <button
                       onClick={() => toggleDropdown(filter)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 flex-shrink-0 transition-all hover:border-gray-400 ${
+                      className={`flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 flex-shrink-0 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1 ${
                         isActive ? 'font-bold text-gray-900 border-gray-500' : 'text-gray-600'
                       }`}
                       data-testid={`button-filter-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       <span>{filter}</span>
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {/* Dropdown Panel */}
                     {isOpen && (
                       <div
-                        className="absolute top-full mt-2 bg-white rounded shadow-lg border border-gray-200 overflow-hidden"
+                        className="absolute top-full mt-2 bg-white rounded shadow-lg border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200"
                         style={{ 
                           width: '300px',
                           maxHeight: '400px',
@@ -408,7 +416,7 @@ export default function SearchPage() {
                                   [filter]: e.target.value
                                 }));
                               }}
-                              className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                              className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
                               data-testid={`input-dropdown-search-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                             />
                           </div>
@@ -459,7 +467,7 @@ export default function SearchPage() {
             <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
             <button
               onClick={() => setIsMobileDrawerOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded"
+              className="p-2 hover:bg-gray-100 rounded transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
               data-testid="button-close-drawer"
             >
               <X className="h-5 w-5" />
@@ -475,7 +483,7 @@ export default function SearchPage() {
                 placeholder="Search here..."
                 value={sidebarSearchInput}
                 onChange={(e) => setSidebarSearchInput(e.target.value)}
-                className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
                 data-testid="input-drawer-search"
               />
             </div>
@@ -502,7 +510,7 @@ export default function SearchPage() {
               <div key={filter} className="border-b border-gray-200">
                 <button
                   onClick={() => setOpenDropdown(openDropdown === filter ? null : filter)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
+                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400"
                   data-testid={`button-drawer-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <span className="font-medium text-gray-900">{filter}</span>
@@ -512,11 +520,11 @@ export default function SearchPage() {
                         {selectedFilters[filter].size}
                       </span>
                     )}
-                    <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === filter ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${openDropdown === filter ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
                 {openDropdown === filter && (
-                  <div className="bg-gray-50">
+                  <div className="bg-gray-50 animate-in slide-in-from-top-2 duration-200">
                     {/* Search Input */}
                     <div className="p-3 border-t border-gray-200">
                       <div className="flex items-center bg-white rounded border border-gray-300">
@@ -531,7 +539,7 @@ export default function SearchPage() {
                               [filter]: e.target.value
                             }));
                           }}
-                          className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                          className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
                           data-testid={`input-drawer-search-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                         />
                       </div>
@@ -560,13 +568,13 @@ export default function SearchPage() {
         <div className="container mx-auto px-4 py-6">
           {/* Selected Filters Pills */}
           {Object.keys(selectedFilters).length > 0 && (
-            <div className="mb-6">
+            <div className="mb-6 animate-in fade-in duration-300">
               <div className="flex flex-wrap gap-2">
                 {Object.entries(selectedFilters).map(([category, labels]) => 
                   Array.from(labels).map((label) => (
                     <div
                       key={`${category}-${label}`}
-                      className="inline-flex items-center gap-2 rounded-full text-white text-sm"
+                      className="inline-flex items-center gap-2 rounded-full text-white text-sm animate-in fade-in slide-in-from-left-2 duration-200"
                       style={{ 
                         backgroundColor: '#dc2626',
                         paddingLeft: '12px',
@@ -581,7 +589,7 @@ export default function SearchPage() {
                       </span>
                       <button
                         onClick={() => removeFilter(category, label)}
-                        className="hover:bg-red-700 rounded-full p-0.5 transition-colors"
+                        className="hover:bg-red-700 rounded-full p-0.5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1 focus-visible:ring-offset-red-600"
                         data-testid={`button-remove-${category.toLowerCase()}-${label.toLowerCase().replace(/\s+/g, '-')}`}
                       >
                         <span className="text-white font-bold">×</span>
@@ -609,7 +617,7 @@ export default function SearchPage() {
                     placeholder="Search here..."
                     value={sidebarSearchInput}
                     onChange={(e) => setSidebarSearchInput(e.target.value)}
-                    className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                    className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
                     data-testid="input-sidebar-search"
                   />
                 </div>
@@ -632,7 +640,8 @@ export default function SearchPage() {
 
             {/* Main Content Area - Flexible width, scrollable */}
             <div 
-              className="flex-1 md:overflow-y-auto"
+              ref={mainContentRef}
+              className="flex-1 md:overflow-y-auto scroll-smooth"
               style={{ maxHeight: 'calc(100vh - 300px)' }}
               data-testid="main-content"
             >
@@ -699,7 +708,7 @@ export default function SearchPage() {
                   {/* First Page */}
                   <button
                     onClick={() => setCurrentPage(1)}
-                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-all duration-200 border border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1"
                     data-testid="button-page-first"
                   >
                     «
@@ -708,7 +717,7 @@ export default function SearchPage() {
                   {/* Previous Page */}
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-all duration-200 border border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1"
                     data-testid="button-page-prev"
                   >
                     ‹
@@ -719,10 +728,10 @@ export default function SearchPage() {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-9 h-9 flex items-center justify-center rounded transition-colors border ${
+                      className={`w-9 h-9 flex items-center justify-center rounded transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${
                         currentPage === page
-                          ? 'bg-[#dc2626] text-white border-[#dc2626]'
-                          : 'bg-white text-gray-600 hover:bg-gray-100 border-gray-300'
+                          ? 'bg-[#dc2626] text-white border-[#dc2626] focus-visible:ring-red-400'
+                          : 'bg-white text-gray-600 hover:bg-gray-100 border-gray-300 focus-visible:ring-gray-400'
                       }`}
                       data-testid={`button-page-${page}`}
                     >
@@ -733,7 +742,7 @@ export default function SearchPage() {
                   {/* Next Page */}
                   <button
                     onClick={() => setCurrentPage(Math.min(7, currentPage + 1))}
-                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-all duration-200 border border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1"
                     data-testid="button-page-next"
                   >
                     ›
@@ -742,7 +751,7 @@ export default function SearchPage() {
                   {/* Last Page */}
                   <button
                     onClick={() => setCurrentPage(7)}
-                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-all duration-200 border border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1"
                     data-testid="button-page-last"
                   >
                     »
@@ -768,7 +777,7 @@ export default function SearchPage() {
                   <Button
                     onClick={clearAllFilters}
                     variant="outline"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-gray-400"
                     data-testid="button-clear-all-filters"
                   >
                     <X className="w-4 h-4" />
