@@ -37,8 +37,35 @@ export default function Header() {
         <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
           {/* Logo */}
           <Link href="/">
-            <div className="cursor-pointer" data-testid="link-home">
-              <span className="text-2xl font-bold text-white tracking-wide">IMAGELOCATIONS</span>
+            <div className="flex items-center gap-3 cursor-pointer" data-testid="link-home" style={{ width: '220px' }}>
+              {/* Red Circular Icon */}
+              <div 
+                className="flex items-center justify-center rounded-full flex-shrink-0"
+                style={{ 
+                  width: '40px', 
+                  height: '40px', 
+                  backgroundColor: '#dc2626'
+                }}
+              >
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="white" 
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+              
+              {/* Logo Text */}
+              <span className="text-xl font-bold text-white" style={{ letterSpacing: '1px' }}>
+                SGS LOCATIONS<sup style={{ fontSize: '10px' }}>®</sup>
+              </span>
             </div>
           </Link>
 
