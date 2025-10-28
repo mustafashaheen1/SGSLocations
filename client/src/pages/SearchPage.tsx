@@ -7,6 +7,7 @@ import { Search, ChevronDown } from 'lucide-react';
 
 export default function SearchPage() {
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const filterButtons = [
     'Categories',
@@ -21,14 +22,8 @@ export default function SearchPage() {
     'Yard'
   ];
 
-  const toggleFilter = (filter: string) => {
-    const newActiveFilters = new Set(activeFilters);
-    if (newActiveFilters.has(filter)) {
-      newActiveFilters.delete(filter);
-    } else {
-      newActiveFilters.add(filter);
-    }
-    setActiveFilters(newActiveFilters);
+  const toggleDropdown = (filter: string) => {
+    setOpenDropdown(openDropdown === filter ? null : filter);
   };
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -70,18 +65,55 @@ export default function SearchPage() {
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               {filterButtons.map((filter) => {
                 const isActive = activeFilters.has(filter);
+                const isOpen = openDropdown === filter;
                 return (
-                  <button
-                    key={filter}
-                    onClick={() => toggleFilter(filter)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 flex-shrink-0 transition-all hover:border-gray-400 ${
-                      isActive ? 'font-bold text-gray-900 border-gray-500' : 'text-gray-600'
-                    }`}
-                    data-testid={`button-filter-${filter.toLowerCase().replace(/\s+/g, '-')}`}
-                  >
-                    <span>{filter}</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </button>
+                  <div key={filter} className="relative">
+                    <button
+                      onClick={() => toggleDropdown(filter)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 flex-shrink-0 transition-all hover:border-gray-400 ${
+                        isActive ? 'font-bold text-gray-900 border-gray-500' : 'text-gray-600'
+                      }`}
+                      data-testid={`button-filter-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      <span>{filter}</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+
+                    {/* Dropdown Panel */}
+                    {isOpen && (
+                      <div
+                        className="absolute top-full mt-2 bg-white rounded shadow-lg border border-gray-200 overflow-hidden"
+                        style={{ 
+                          width: '300px',
+                          maxHeight: '400px',
+                          zIndex: 50
+                        }}
+                        data-testid={`dropdown-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                      >
+                        {/* Search Input */}
+                        <div className="p-3 border-b border-gray-200">
+                          <div className="flex items-center bg-gray-50 rounded border border-gray-300">
+                            <Search className="h-4 w-4 text-gray-400 ml-3" />
+                            <Input
+                              type="search"
+                              placeholder="Search here..."
+                              className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                              data-testid={`input-dropdown-search-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Dropdown Content Area (scrollable) */}
+                        <div className="overflow-y-auto" style={{ maxHeight: '340px' }}>
+                          <div className="p-4">
+                            <p className="text-sm text-gray-500">
+                              {filter} options will appear here
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
