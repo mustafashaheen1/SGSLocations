@@ -16,10 +16,6 @@ export default function Header({ transparent = false }: HeaderProps) {
     console.log('Search triggered:', searchQuery);
   };
 
-  const headerBgStyle = {
-    backgroundColor: transparent ? 'rgba(0, 0, 0, 0.3)' : 'rgba(26, 58, 90, 0.98)'
-  };
-
   const navItems = [
     { href: '/search', label: 'SEARCH' },
     { href: '/portfolio', label: 'PORTFOLIO' },
@@ -33,7 +29,7 @@ export default function Header({ transparent = false }: HeaderProps) {
   ];
 
   return (
-    <header className="relative z-50 w-full" style={headerBgStyle}>
+    <header className="relative z-50 w-full bg-transparent">
       <div className="w-full">
         {/* TOP ROW: Logo + Search */}
         <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
