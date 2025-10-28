@@ -23,6 +23,7 @@ import commercialBuilding3 from '@assets/stock_images/commercial_building__46ce9
 export default function SearchPage() {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, Set<string>>>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Property images array
   const propertyImages = [
@@ -379,6 +380,63 @@ export default function SearchPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="flex justify-center items-center mt-8 mb-6">
+                <div className="flex items-center gap-2">
+                  {/* First Page */}
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    data-testid="button-page-first"
+                  >
+                    «
+                  </button>
+
+                  {/* Previous Page */}
+                  <button
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    data-testid="button-page-prev"
+                  >
+                    ‹
+                  </button>
+
+                  {/* Page Numbers */}
+                  {[1, 2, 3, 4, 5, 6, 7].map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-9 h-9 flex items-center justify-center rounded transition-colors border ${
+                        currentPage === page
+                          ? 'bg-[#dc2626] text-white border-[#dc2626]'
+                          : 'bg-white text-gray-600 hover:bg-gray-100 border-gray-300'
+                      }`}
+                      data-testid={`button-page-${page}`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  {/* Next Page */}
+                  <button
+                    onClick={() => setCurrentPage(Math.min(7, currentPage + 1))}
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    data-testid="button-page-next"
+                  >
+                    ›
+                  </button>
+
+                  {/* Last Page */}
+                  <button
+                    onClick={() => setCurrentPage(7)}
+                    className="w-9 h-9 flex items-center justify-center rounded bg-white text-gray-600 hover:bg-gray-100 transition-colors border border-gray-300"
+                    data-testid="button-page-last"
+                  >
+                    »
+                  </button>
+                </div>
               </div>
             </div>
           </div>
