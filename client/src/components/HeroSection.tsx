@@ -1,6 +1,15 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 export default function HeroSection() {
+  const [heroSearchQuery, setHeroSearchQuery] = useState('');
+
+  const handleHeroSearch = () => {
+    console.log('Hero search triggered:', heroSearchQuery);
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Video with Image Fallback */}
@@ -90,6 +99,34 @@ export default function HeroSection() {
             onClick={() => console.log('Navigate to list property')}
           >
             List Your Property
+          </Button>
+        </div>
+
+        {/* Hero Search Bar */}
+        <div 
+          className="flex items-center bg-white rounded-lg overflow-hidden mt-10"
+          style={{ 
+            width: '600px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          <Input
+            type="search"
+            placeholder="Search by location, property type, or features..."
+            className="border-0 bg-white text-foreground placeholder:text-muted-foreground focus-visible:ring-0 h-12 px-5 flex-1 text-base"
+            value={heroSearchQuery}
+            onChange={(e) => setHeroSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleHeroSearch()}
+            data-testid="input-hero-search"
+          />
+          <Button
+            size="icon"
+            className="h-12 w-12 rounded-none flex-shrink-0"
+            style={{ backgroundColor: '#dc2626' }}
+            onClick={handleHeroSearch}
+            data-testid="button-hero-search"
+          >
+            <Search className="h-5 w-5 text-white" />
           </Button>
         </div>
       </div>
