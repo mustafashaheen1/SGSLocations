@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
@@ -21,9 +22,46 @@ import commercialBuilding2 from '@assets/stock_images/commercial_building__e3dd5
 import commercialBuilding3 from '@assets/stock_images/commercial_building__46ce9b88.jpg';
 
 export default function SearchPage() {
+  const [location, setLocation] = useLocation();
   const [selectedFilters, setSelectedFilters] = useState<Record<string, Set<string>>>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Load filters from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filters: Record<string, Set<string>> = {};
+    
+    params.forEach((value, key) => {
+      if (!filters[key]) {
+        filters[key] = new Set();
+      }
+      filters[key].add(value);
+    });
+
+    if (Object.keys(filters).length > 0) {
+      setSelectedFilters(filters);
+    }
+  }, []);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    
+    Object.entries(selectedFilters).forEach(([category, labels]) => {
+      labels.forEach(label => {
+        params.append(category, label);
+      });
+    });
+
+    const newSearch = params.toString();
+    const newUrl = newSearch ? `/search?${newSearch}` : '/search';
+    
+    // Update URL without reload
+    if (window.location.pathname + window.location.search !== newUrl) {
+      window.history.pushState({}, '', newUrl);
+    }
+  }, [selectedFilters]);
 
   // Property images array
   const propertyImages = [
