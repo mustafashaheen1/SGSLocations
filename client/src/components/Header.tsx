@@ -29,14 +29,9 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/">
-              <span className="text-base font-medium text-foreground hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-home">
-                Home
-              </span>
-            </Link>
             <Link href="/locations">
-              <span className="text-base font-medium text-foreground hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-locations">
-                Locations
+              <span className="text-base font-medium text-foreground hover-elevate px-3 py-2 rounded-lg cursor-pointer inline-block" data-testid="link-nav-search">
+                Search
               </span>
             </Link>
             <Link href="/categories">
@@ -121,14 +116,9 @@ export default function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-6 space-y-2">
-            <Link href="/">
-              <span className="block text-xl font-medium py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-home">
-                Home
-              </span>
-            </Link>
             <Link href="/locations">
-              <span className="block text-xl font-medium py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-locations">
-                Locations
+              <span className="block text-xl font-medium py-3 px-4 hover-elevate rounded-lg cursor-pointer" data-testid="link-mobile-search">
+                Search
               </span>
             </Link>
             <Link href="/categories">
