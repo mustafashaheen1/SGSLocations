@@ -35,17 +35,25 @@ export default function Header() {
 
             {/* Search Bar + Actions */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 w-96">
-                <Search className="h-4 w-4 text-white/60" />
+              <div className="flex items-center bg-white rounded-lg overflow-hidden" style={{ width: '400px' }}>
                 <Input
                   type="search"
                   placeholder="Search locations..."
-                  className="border-0 bg-transparent text-white placeholder:text-white/60 focus-visible:ring-0 h-8 p-0"
+                  className="border-0 bg-white text-foreground placeholder:text-muted-foreground focus-visible:ring-0 h-10 px-4 flex-1"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   data-testid="input-header-search"
                 />
+                <Button
+                  size="icon"
+                  className="h-10 w-10 rounded-none flex-shrink-0"
+                  style={{ backgroundColor: '#dc2626' }}
+                  onClick={handleSearch}
+                  data-testid="button-header-search"
+                >
+                  <Search className="h-5 w-5 text-white" />
+                </Button>
               </div>
 
               {isLoggedIn ? (
@@ -125,35 +133,33 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:text-white hover:bg-white/10"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              data-testid="button-mobile-menu"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+            {/* Mobile Actions */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-white hover:bg-white/10"
+                onClick={() => console.log('Open mobile search')}
+                data-testid="button-mobile-search-icon"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-white hover:bg-white/10"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                data-testid="button-mobile-menu"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div className="pb-6 space-y-3">
-              {/* Mobile Search */}
-              <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-                <Search className="h-4 w-4 text-white/60" />
-                <Input
-                  type="search"
-                  placeholder="Search locations..."
-                  className="border-0 bg-transparent text-white placeholder:text-white/60 focus-visible:ring-0 h-8 p-0"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  data-testid="input-mobile-search"
-                />
-              </div>
-
               {/* Mobile Navigation */}
               <div className="space-y-1">
                 <Link href="/locations">
