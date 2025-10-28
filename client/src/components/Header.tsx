@@ -80,11 +80,21 @@ export default function Header() {
           </Link>
 
           {/* Desktop Search Bar */}
-          <div className="hidden md:flex items-center bg-white rounded-lg overflow-hidden" style={{ width: '400px' }}>
+          <div 
+            className="hidden md:flex items-center rounded-lg overflow-hidden" 
+            style={{ 
+              width: '400px',
+              border: isHomepage ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid #e5e7eb'
+            }}
+          >
             <Input
               type="search"
               placeholder="Search locations..."
-              className="border-0 bg-white text-foreground placeholder:text-muted-foreground focus-visible:ring-0 h-10 px-4 flex-1"
+              className={`border-0 focus-visible:ring-0 h-10 px-4 flex-1 ${isHomepage ? 'search-input-homepage' : 'search-input-other'}`}
+              style={{
+                backgroundColor: isHomepage ? 'rgba(255, 255, 255, 0.2)' : '#f3f4f6',
+                color: isHomepage ? '#ffffff' : '#1f2937'
+              }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}

@@ -7,6 +7,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Header search input placeholder colors */
+.search-input-homepage::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-input-other::placeholder {
+  color: #9ca3af;
+}
+
 /* Fade-in animation on scroll */
 @keyframes fadeInUp {
   from {
