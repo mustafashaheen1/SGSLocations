@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import FilterToggle from '@/components/FilterToggle';
 
 // Import property images
@@ -30,6 +30,7 @@ export default function SearchPage() {
   const [sidebarSearch, setSidebarSearch] = useState('');
   const [dropdownSearchInputs, setDropdownSearchInputs] = useState<Record<string, string>>({});
   const [dropdownSearches, setDropdownSearches] = useState<Record<string, string>>({});
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   // Load filters from URL on mount
   useEffect(() => {
@@ -56,6 +57,13 @@ export default function SearchPage() {
 
     return () => clearTimeout(timer);
   }, [sidebarSearchInput]);
+
+  // Close mobile drawer when opening a filter category in drawer
+  useEffect(() => {
+    if (isMobileDrawerOpen && openDropdown) {
+      // Keep drawer open while browsing filters
+    }
+  }, [openDropdown, isMobileDrawerOpen]);
 
   // Debounce dropdown searches (300ms)
   useEffect(() => {
@@ -288,18 +296,17 @@ export default function SearchPage() {
       {/* Main Content - Account for fixed header height (110px) */}
       <main className="flex-1 pt-[110px]">
         {/* Image Search Box */}
-        <div className="bg-white py-8">
+        <div className="bg-white py-4 md:py-8">
           <div className="container mx-auto px-4">
             <div 
-              className="border-2 border-dashed border-gray-400 rounded-lg bg-white transition-colors hover:border-gray-600 cursor-pointer flex flex-col items-center justify-center"
-              style={{ height: '150px' }}
+              className="border-2 border-dashed border-gray-400 rounded-lg bg-white transition-colors hover:border-gray-600 cursor-pointer flex flex-col items-center justify-center h-[100px] md:h-[150px]"
               onClick={() => document.getElementById('image-upload-input')?.click()}
               data-testid="dropzone-image-search"
             >
-              <p className="text-lg font-semibold text-gray-700 mb-2" data-testid="text-image-search-title">
+              <p className="text-sm md:text-lg font-semibold text-gray-700 mb-1 md:mb-2 px-4 text-center" data-testid="text-image-search-title">
                 Search a Location Using An Image As Reference
               </p>
-              <p className="text-sm text-gray-500" data-testid="text-image-search-instructions">
+              <p className="text-xs md:text-sm text-gray-500 px-4 text-center" data-testid="text-image-search-instructions">
                 Drag & Drop an image here or click here to select a file
               </p>
               
@@ -315,8 +322,28 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Horizontal Filter Bar */}
-        <div className="bg-white border-b border-gray-200 py-4 sticky top-[110px] z-40">
+        {/* Mobile Filters Button */}
+        <div className="md:hidden bg-white border-b border-gray-200 py-3 sticky top-[110px] z-40">
+          <div className="container mx-auto px-4">
+            <Button
+              onClick={() => setIsMobileDrawerOpen(true)}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+              data-testid="button-mobile-filters"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              <span>Filters</span>
+              {Object.keys(selectedFilters).length > 0 && (
+                <span className="ml-2 px-2 py-0.5 rounded-full text-xs font-semibold text-white" style={{ backgroundColor: '#dc2626' }}>
+                  {Object.values(selectedFilters).reduce((sum, set) => sum + set.size, 0)}
+                </span>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Desktop Horizontal Filter Bar */}
+        <div className="hidden md:block bg-white border-b border-gray-200 py-4 sticky top-[110px] z-40">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               {filterButtons.map((filter) => {
@@ -387,6 +414,124 @@ export default function SearchPage() {
           </div>
         </div>
 
+        {/* Mobile Drawer Overlay */}
+        {isMobileDrawerOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 md:hidden"
+            style={{ zIndex: 9998 }}
+            onClick={() => setIsMobileDrawerOpen(false)}
+            data-testid="overlay-mobile-drawer"
+          />
+        )}
+
+        {/* Mobile Drawer */}
+        <div
+          className={`fixed top-0 left-0 h-full bg-white md:hidden transition-transform duration-300 ease-in-out ${
+            isMobileDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          style={{ width: '85%', maxWidth: '320px', zIndex: 9999 }}
+          data-testid="drawer-mobile-filters"
+        >
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+            <button
+              onClick={() => setIsMobileDrawerOpen(false)}
+              className="p-2 hover:bg-gray-100 rounded"
+              data-testid="button-close-drawer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Drawer Search Box */}
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center bg-white rounded border border-gray-300">
+              <Search className="h-4 w-4 text-gray-400 ml-3" />
+              <Input
+                type="search"
+                placeholder="Search here..."
+                value={sidebarSearchInput}
+                onChange={(e) => setSidebarSearchInput(e.target.value)}
+                className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                data-testid="input-drawer-search"
+              />
+            </div>
+          </div>
+
+          {/* Drawer Filters - Vertical Layout */}
+          <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+            {/* Sidebar Filters */}
+            <div className="border-b border-gray-200">
+              {sidebarFilters.map((filter) => (
+                <FilterToggle
+                  key={filter.label}
+                  label={filter.label}
+                  count={filter.count}
+                  defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
+                  onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
+                />
+              ))}
+            </div>
+
+            {/* Dropdown Filters as Expandable Sections */}
+            {filterButtons.map((filter) => (
+              <div key={filter} className="border-b border-gray-200">
+                <button
+                  onClick={() => setOpenDropdown(openDropdown === filter ? null : filter)}
+                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
+                  data-testid={`button-drawer-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <span className="font-medium text-gray-900">{filter}</span>
+                  <div className="flex items-center gap-2">
+                    {selectedFilters[filter] && selectedFilters[filter].size > 0 && (
+                      <span className="px-2 py-0.5 rounded-full text-xs font-semibold text-white" style={{ backgroundColor: '#dc2626' }}>
+                        {selectedFilters[filter].size}
+                      </span>
+                    )}
+                    <ChevronDown className={`h-4 w-4 transition-transform ${openDropdown === filter ? 'rotate-180' : ''}`} />
+                  </div>
+                </button>
+                {openDropdown === filter && (
+                  <div className="bg-gray-50">
+                    {/* Search Input */}
+                    <div className="p-3 border-t border-gray-200">
+                      <div className="flex items-center bg-white rounded border border-gray-300">
+                        <Search className="h-4 w-4 text-gray-400 ml-3" />
+                        <Input
+                          type="search"
+                          placeholder="Search here..."
+                          value={getDropdownSearchInput(filter)}
+                          onChange={(e) => {
+                            setDropdownSearchInputs(prev => ({
+                              ...prev,
+                              [filter]: e.target.value
+                            }));
+                          }}
+                          className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                          data-testid={`input-drawer-search-${filter.toLowerCase().replace(/\s+/g, '-')}`}
+                        />
+                      </div>
+                    </div>
+                    {/* Options */}
+                    <div>
+                      {getFilterOptions(filter).map((option) => (
+                        <FilterToggle
+                          key={option.label}
+                          label={option.label}
+                          count={option.count}
+                          defaultChecked={selectedFilters[filter]?.has(option.label) || false}
+                          onChange={(checked) => handleDropdownFilterToggle(filter, option.label, checked)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Two-Column Layout */}
         <div className="container mx-auto px-4 py-6">
           {/* Selected Filters Pills */}
@@ -424,10 +569,10 @@ export default function SearchPage() {
             </div>
           )}
 
-          <div className="flex gap-6">
-            {/* Sidebar - Fixed width, scrollable */}
+          <div className="md:flex gap-6">
+            {/* Desktop Sidebar - Hidden on mobile */}
             <aside 
-              className="w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200"
+              className="hidden md:block w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200"
               style={{ maxHeight: 'calc(100vh - 300px)' }}
               data-testid="sidebar-filters"
             >
@@ -462,21 +607,22 @@ export default function SearchPage() {
 
             {/* Main Content Area - Flexible width, scrollable */}
             <div 
-              className="flex-1 overflow-y-auto"
+              className="flex-1 md:overflow-y-auto"
               style={{ maxHeight: 'calc(100vh - 300px)' }}
               data-testid="main-content"
             >
               {/* Results Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900" data-testid="text-results-count">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900" data-testid="text-results-count">
                   65 Locations Found
                 </h2>
                 
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-600">Sort by:</span>
+                <div className="flex items-center gap-2 md:gap-3">
+                  <span className="text-xs md:text-sm text-gray-600 hidden sm:inline">Sort by:</span>
                   <Button
                     variant="outline"
                     size="sm"
+                    className="text-xs md:text-sm"
                     data-testid="button-sort"
                   >
                     Relevance
@@ -484,8 +630,8 @@ export default function SearchPage() {
                 </div>
               </div>
 
-              {/* Results Grid - 3 columns, 20px gap */}
-              <div className="grid grid-cols-3 gap-5">
+              {/* Results Grid - 1 column mobile, 3 columns desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
                 {propertyImages.map((image, i) => (
                   <div
                     key={i}
