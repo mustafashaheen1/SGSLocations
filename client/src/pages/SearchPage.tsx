@@ -26,6 +26,10 @@ export default function SearchPage() {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, Set<string>>>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sidebarSearchInput, setSidebarSearchInput] = useState('');
+  const [sidebarSearch, setSidebarSearch] = useState('');
+  const [dropdownSearchInputs, setDropdownSearchInputs] = useState<Record<string, string>>({});
+  const [dropdownSearches, setDropdownSearches] = useState<Record<string, string>>({});
 
   // Load filters from URL on mount
   useEffect(() => {
@@ -43,6 +47,24 @@ export default function SearchPage() {
       setSelectedFilters(filters);
     }
   }, []);
+
+  // Debounce sidebar search (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSidebarSearch(sidebarSearchInput);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [sidebarSearchInput]);
+
+  // Debounce dropdown searches (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDropdownSearches(dropdownSearchInputs);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [dropdownSearchInputs]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -102,7 +124,7 @@ export default function SearchPage() {
   };
 
   // Sidebar filters with counts and category mapping
-  const sidebarFilters = [
+  const allSidebarFilters = [
     { label: 'New', count: 245, category: 'Categories' },
     { label: 'Modern', count: 512, category: 'Categories' },
     { label: 'Pool', count: 234, category: 'Pool' },
@@ -118,6 +140,11 @@ export default function SearchPage() {
     { label: 'Architectural', count: 287, category: 'Categories' },
     { label: 'Mid-Century Modern', count: 178, category: 'Categories' },
   ];
+
+  // Filter sidebar based on search
+  const sidebarFilters = allSidebarFilters.filter(filter => 
+    filter.label.toLowerCase().includes(sidebarSearch.toLowerCase())
+  );
 
   const filterButtons = [
     'Categories',
@@ -142,8 +169,18 @@ export default function SearchPage() {
     // Keep dropdown open for multiple selections - user can click outside to close
   };
 
+  // Get search term for a specific dropdown (debounced)
+  const getDropdownSearch = (filterName: string) => {
+    return dropdownSearches[filterName] || '';
+  };
+
+  // Get input value for a specific dropdown (instant)
+  const getDropdownSearchInput = (filterName: string) => {
+    return dropdownSearchInputs[filterName] || '';
+  };
+
   // Filter data for different categories
-  const getFilterOptions = (filterName: string) => {
+  const getAllFilterOptions = (filterName: string) => {
     const options: Record<string, Array<{ label: string; count: number }>> = {
       'Categories': [
         { label: 'Residential', count: 763 },
@@ -230,6 +267,20 @@ export default function SearchPage() {
     };
     return options[filterName] || [];
   };
+
+  // Get filtered options based on search
+  const getFilterOptions = (filterName: string) => {
+    const allOptions = getAllFilterOptions(filterName);
+    const searchTerm = getDropdownSearch(filterName);
+    
+    if (!searchTerm) {
+      return allOptions;
+    }
+    
+    return allOptions.filter(option =>
+      option.label.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
@@ -302,6 +353,13 @@ export default function SearchPage() {
                             <Input
                               type="search"
                               placeholder="Search here..."
+                              value={getDropdownSearchInput(filter)}
+                              onChange={(e) => {
+                                setDropdownSearchInputs(prev => ({
+                                  ...prev,
+                                  [filter]: e.target.value
+                                }));
+                              }}
                               className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
                               data-testid={`input-dropdown-search-${filter.toLowerCase().replace(/\s+/g, '-')}`}
                             />
@@ -380,6 +438,8 @@ export default function SearchPage() {
                   <Input
                     type="search"
                     placeholder="Search here..."
+                    value={sidebarSearchInput}
+                    onChange={(e) => setSidebarSearchInput(e.target.value)}
                     className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
                     data-testid="input-sidebar-search"
                   />
