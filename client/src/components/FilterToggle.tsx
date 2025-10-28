@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface FilterToggleProps {
   label: string;
@@ -14,6 +14,11 @@ export default function FilterToggle({
   onChange 
 }: FilterToggleProps) {
   const [isChecked, setIsChecked] = useState(defaultChecked);
+
+  // Update state when defaultChecked changes
+  useEffect(() => {
+    setIsChecked(defaultChecked);
+  }, [defaultChecked]);
 
   const handleToggle = () => {
     const newValue = !isChecked;

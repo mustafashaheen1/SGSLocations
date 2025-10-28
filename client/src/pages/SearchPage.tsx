@@ -7,8 +7,30 @@ import { Search, ChevronDown } from 'lucide-react';
 import FilterToggle from '@/components/FilterToggle';
 
 export default function SearchPage() {
-  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, Set<string>>>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const handleFilterToggle = (category: string, label: string, checked: boolean) => {
+    setSelectedFilters(prev => {
+      const newFilters = { ...prev };
+      if (!newFilters[category]) {
+        newFilters[category] = new Set();
+      }
+      if (checked) {
+        newFilters[category].add(label);
+      } else {
+        newFilters[category].delete(label);
+        if (newFilters[category].size === 0) {
+          delete newFilters[category];
+        }
+      }
+      return newFilters;
+    });
+  };
+
+  const removeFilter = (category: string, label: string) => {
+    handleFilterToggle(category, label, false);
+  };
 
   const filterButtons = [
     'Categories',
@@ -135,7 +157,7 @@ export default function SearchPage() {
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               {filterButtons.map((filter) => {
-                const isActive = activeFilters.has(filter);
+                const isActive = selectedFilters[filter] && selectedFilters[filter].size > 0;
                 const isOpen = openDropdown === filter;
                 return (
                   <div key={filter} className="relative">
@@ -181,6 +203,8 @@ export default function SearchPage() {
                               key={option.label}
                               label={option.label}
                               count={option.count}
+                              defaultChecked={selectedFilters[filter]?.has(option.label) || false}
+                              onChange={(checked) => handleFilterToggle(filter, option.label, checked)}
                             />
                           ))}
                         </div>
@@ -195,6 +219,41 @@ export default function SearchPage() {
 
         {/* Two-Column Layout */}
         <div className="container mx-auto px-4 py-6">
+          {/* Selected Filters Pills */}
+          {Object.keys(selectedFilters).length > 0 && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(selectedFilters).map(([category, labels]) => 
+                  Array.from(labels).map((label) => (
+                    <div
+                      key={`${category}-${label}`}
+                      className="inline-flex items-center gap-2 rounded-full text-white text-sm"
+                      style={{ 
+                        backgroundColor: '#dc2626',
+                        paddingLeft: '12px',
+                        paddingRight: '8px',
+                        paddingTop: '6px',
+                        paddingBottom: '6px'
+                      }}
+                      data-testid={`pill-${category.toLowerCase()}-${label.toLowerCase().replace(/\s+/g, '-')}`}
+                    >
+                      <span className="lowercase">
+                        {category.toLowerCase()}: {label}
+                      </span>
+                      <button
+                        onClick={() => removeFilter(category, label)}
+                        className="hover:bg-red-700 rounded-full p-0.5 transition-colors"
+                        data-testid={`button-remove-${category.toLowerCase()}-${label.toLowerCase().replace(/\s+/g, '-')}`}
+                      >
+                        <span className="text-white font-bold">×</span>
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-6">
             {/* Sidebar - Fixed width, scrollable */}
             <aside 
