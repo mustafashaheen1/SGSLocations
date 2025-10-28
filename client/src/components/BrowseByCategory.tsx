@@ -13,18 +13,15 @@ interface BrowseByCategoryProps {
 
 export default function BrowseByCategory({ categories }: BrowseByCategoryProps) {
   return (
-    <section className="py-12 md:py-20 bg-card">
+    <section style={{ backgroundColor: '#f8f9fa', paddingTop: '80px', paddingBottom: '80px' }}>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4" data-testid="heading-browse-category">
             Browse by Category
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Find the perfect location for your production from our diverse collection
-          </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category) => (
             <CategoryTile key={category.id} {...category} />
           ))}

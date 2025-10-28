@@ -75,14 +75,18 @@ const mockProperties = [
 ];
 
 const mockCategories = [
-  { id: 'estates', image: estateImage, title: 'Luxury Estates', count: 12 },
+  { id: 'estates', image: estateImage, title: 'Estates & Luxury Homes', count: 12 },
   { id: 'modern', image: modernImage, title: 'Modern Architecture', count: 15 },
   { id: 'natural', image: lakeImage, title: 'Natural Settings', count: 8 },
-  { id: 'urban', image: loftImage, title: 'Urban Spaces', count: 10 },
+  { id: 'urban', image: loftImage, title: 'Urban & Industrial', count: 10 },
   { id: 'historical', image: victorianImage, title: 'Historical Properties', count: 6 },
-  { id: 'ranch', image: ranchImage, title: 'Ranches & Farms', count: 7 },
-  { id: 'commercial', image: loftImage, title: 'Commercial Spaces', count: 9 },
-  { id: 'industrial', image: loftImage, title: 'Industrial Locations', count: 5 },
+  { id: 'commercial', image: estateImage, title: 'Commercial Spaces', count: 9 },
+  { id: 'restaurants', image: modernImage, title: 'Restaurants & Bars', count: 7 },
+  { id: 'outdoor', image: lakeImage, title: 'Outdoor Spaces', count: 11 },
+  { id: 'educational', image: estateImage, title: 'Educational Facilities', count: 5 },
+  { id: 'sports', image: loftImage, title: 'Sports Facilities', count: 4 },
+  { id: 'warehouses', image: loftImage, title: 'Warehouses & Lofts', count: 8 },
+  { id: 'midcentury', image: modernImage, title: 'Mid-Century Modern', count: 6 },
 ];
 
 const mockClients = [
