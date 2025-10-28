@@ -31,7 +31,7 @@ export default function Header() {
     <header 
       className="relative z-50 w-full"
       style={{ 
-        background: isHomepage ? 'transparent' : '#ffffff',
+        background: isHomepage ? 'rgba(0, 0, 0, 0.4)' : '#ffffff',
         borderBottom: isHomepage ? 'none' : '1px solid #e5e7eb'
       }}
     >
