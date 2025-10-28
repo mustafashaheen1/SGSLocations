@@ -1,93 +1,89 @@
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Building2, Film } from 'lucide-react';
 
 export default function DualCTA() {
   return (
-    <section className="py-12 md:py-24">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {/* Property Owners CTA */}
-          <Card className="p-8 md:p-12 hover-elevate" data-testid="card-property-owners">
-            <div className="mb-6">
-              <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Building2 className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Property Owners
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                List your property and connect with film and TV production companies. Earn income while your property stars on screen.
-              </p>
-              <ul className="space-y-2 mb-8 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Free property listing
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Professional photography support
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Direct communication with productions
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Flexible scheduling options
-                </li>
-              </ul>
-            </div>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={() => console.log('Navigate to list property')}
-              data-testid="button-list-your-property"
-            >
-              List Your Property
-            </Button>
-          </Card>
+    <section className="grid grid-cols-1 md:grid-cols-2">
+      {/* Left Side: Production Professionals */}
+      <div
+        className="relative min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden"
+        data-testid="cta-production-professionals"
+      >
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1579389083078-4e7018379f7e?q=80&w=2070&auto=format&fit=crop)',
+          }}
+        />
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/60" />
 
-          {/* Production Teams CTA */}
-          <Card className="p-8 md:p-12 hover-elevate" data-testid="card-production-teams">
-            <div className="mb-6">
-              <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                <Film className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Production Professionals
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                Access Dallas Fort Worth's largest database of filming locations. Find the perfect setting for your next production.
-              </p>
-              <ul className="space-y-2 mb-8 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  65+ curated locations
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Advanced search and filtering
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Save and organize favorites
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                  Direct property owner contact
-                </li>
-              </ul>
-            </div>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={() => console.log('Navigate to browse locations')}
-              data-testid="button-browse-locations"
-            >
-              Browse Locations
-            </Button>
-          </Card>
+        {/* Content */}
+        <div className="relative z-10 px-8 md:px-16 text-center max-w-xl">
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            For Production Professionals
+          </h3>
+          <p className="text-lg text-white/90 mb-8">
+            Access Dallas Fort Worth's largest database of filming locations. Find the perfect setting for your next production with our advanced search tools.
+          </p>
+          <Button
+            size="lg"
+            className="font-semibold"
+            style={{
+              height: '50px',
+              backgroundColor: '#dc2626',
+              fontSize: '16px',
+              paddingLeft: '32px',
+              paddingRight: '32px',
+            }}
+            onClick={() => console.log('Navigate to search')}
+            data-testid="button-start-searching"
+          >
+            Start Searching
+          </Button>
+        </div>
+      </div>
+
+      {/* Right Side: Property Owners */}
+      <div
+        className="relative min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden"
+        data-testid="cta-property-owners"
+      >
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop)',
+          }}
+        />
+        
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Content */}
+        <div className="relative z-10 px-8 md:px-16 text-center max-w-xl">
+          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            For Property Owners
+          </h3>
+          <p className="text-lg text-white/90 mb-8">
+            List your property and connect with film and TV production companies. Earn income while your property becomes a star on screen.
+          </p>
+          <Button
+            size="lg"
+            variant="outline"
+            className="font-semibold text-white border-2 border-white hover:bg-white/10"
+            style={{
+              height: '50px',
+              fontSize: '16px',
+              paddingLeft: '32px',
+              paddingRight: '32px',
+            }}
+            onClick={() => console.log('Navigate to list property')}
+            data-testid="button-list-property-cta"
+          >
+            List Your Property
+          </Button>
         </div>
       </div>
     </section>
