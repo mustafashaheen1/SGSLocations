@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Menu, X } from 'lucide-react';
 
-interface HeaderProps {
-  transparent?: boolean;
-}
-
-export default function Header({ transparent = false }: HeaderProps) {
+export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location] = useLocation();
+  
+  // Check if we're on the homepage
+  const isHomepage = location === '/';
 
   const handleSearch = () => {
     console.log('Search triggered:', searchQuery);
@@ -29,7 +29,10 @@ export default function Header({ transparent = false }: HeaderProps) {
   ];
 
   return (
-    <header className="relative z-50 w-full bg-transparent">
+    <header 
+      className="relative z-50 w-full" 
+      style={{ backgroundColor: isHomepage ? 'rgba(0, 0, 0, 0.3)' : '#ffffff' }}
+    >
       <div className="w-full">
         {/* TOP ROW: Logo + Search */}
         <div className="flex items-center justify-between px-5" style={{ height: '60px' }}>
@@ -61,7 +64,13 @@ export default function Header({ transparent = false }: HeaderProps) {
               </div>
               
               {/* Logo Text */}
-              <span className="text-xl font-bold text-gray-900" style={{ letterSpacing: '1px' }}>
+              <span 
+                className="text-xl font-bold" 
+                style={{ 
+                  letterSpacing: '1px',
+                  color: isHomepage ? '#ffffff' : '#1f2937'
+                }}
+              >
                 SGS LOCATIONS<sup style={{ fontSize: '10px' }}>®</sup>
               </span>
             </div>
@@ -94,7 +103,7 @@ export default function Header({ transparent = false }: HeaderProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-900 hover:bg-gray-100"
+              className={isHomepage ? "text-white hover:bg-white/10" : "text-gray-900 hover:bg-gray-100"}
               onClick={() => console.log('Open mobile search')}
               data-testid="button-mobile-search"
             >
@@ -103,7 +112,7 @@ export default function Header({ transparent = false }: HeaderProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-gray-900 hover:bg-gray-100"
+              className={isHomepage ? "text-white hover:bg-white/10" : "text-gray-900 hover:bg-gray-100"}
               onClick={() => setMobileMenuOpen(true)}
               data-testid="button-mobile-menu"
             >
@@ -114,22 +123,36 @@ export default function Header({ transparent = false }: HeaderProps) {
 
         {/* BOTTOM ROW: Desktop Navigation Menu */}
         <nav 
-          className="hidden md:flex items-center justify-center gap-3 border-t border-gray-300" 
-          style={{ height: '50px' }}
+          className="hidden md:flex items-center justify-center gap-3 border-t" 
+          style={{ 
+            height: '50px',
+            borderColor: isHomepage ? 'rgba(255, 255, 255, 0.1)' : '#d1d5db'
+          }}
         >
           {navItems.map((item, index) => (
             <div key={item.href} className="flex items-center gap-3">
               <Link href={item.href}>
                 <span 
-                  className="cursor-pointer hover:brightness-75 transition-all text-gray-900" 
-                  style={{ fontSize: '13px', letterSpacing: '0.5px' }} 
+                  className={`cursor-pointer transition-all ${isHomepage ? 'hover:brightness-125' : 'hover:brightness-75'}`}
+                  style={{ 
+                    fontSize: '13px', 
+                    letterSpacing: '0.5px',
+                    color: isHomepage ? '#ffffff' : '#1f2937'
+                  }} 
                   data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   {item.label}
                 </span>
               </Link>
               {index < navItems.length - 1 && (
-                <span className="text-gray-400" style={{ fontSize: '13px' }}>|</span>
+                <span 
+                  style={{ 
+                    fontSize: '13px',
+                    color: isHomepage ? 'rgba(255, 255, 255, 0.4)' : '#9ca3af'
+                  }}
+                >
+                  |
+                </span>
               )}
             </div>
           ))}
