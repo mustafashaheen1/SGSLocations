@@ -90,10 +90,16 @@ const mockCategories = [
 ];
 
 const mockClients = [
-  { id: 'landman', name: 'Landman', logo: logoImage },
-  { id: 'yellowstone', name: 'Yellowstone', logo: logoImage },
-  { id: 'madison', name: 'Madison', logo: logoImage },
-  { id: 'lioness', name: 'Lioness', logo: logoImage },
+  { id: 'landman', name: 'LANDMAN', logo: logoImage },
+  { id: 'yellowstone', name: 'YELLOWSTONE', logo: logoImage },
+  { id: 'madison', name: 'MADISON', logo: logoImage },
+  { id: 'lioness', name: 'LIONESS', logo: logoImage },
+  { id: 'walker', name: 'WALKER', logo: logoImage },
+  { id: 'dallas', name: 'DALLAS', logo: logoImage },
+  { id: 'queen-of-south', name: 'QUEEN OF THE SOUTH', logo: logoImage },
+  { id: 'friday-night', name: 'FRIDAY NIGHT LIGHTS', logo: logoImage },
+  { id: 'texas-ranger', name: 'WALKER TEXAS RANGER', logo: logoImage },
+  { id: 'boy-band', name: 'BOY BAND', logo: logoImage },
 ];
 
 export default function Home() {
