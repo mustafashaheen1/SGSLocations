@@ -32,6 +32,24 @@ export default function SearchPage() {
     handleFilterToggle(category, label, false);
   };
 
+  // Sidebar filters with counts
+  const sidebarFilters = [
+    { label: 'New', count: 245 },
+    { label: 'Modern', count: 512 },
+    { label: 'Pool', count: 234 },
+    { label: 'Kitchen', count: 678 },
+    { label: 'Americana', count: 123 },
+    { label: 'Views', count: 389 },
+    { label: 'Bathroom', count: 543 },
+    { label: 'Retro', count: 156 },
+    { label: 'Driveway', count: 445 },
+    { label: 'Mediterranean', count: 98 },
+    { label: 'Event Locations', count: 167 },
+    { label: 'Spanish', count: 203 },
+    { label: 'Architectural', count: 287 },
+    { label: 'Mid-Century Modern', count: 178 },
+  ];
+
   const filterButtons = [
     'Categories',
     'Permits',
@@ -257,42 +275,34 @@ export default function SearchPage() {
           <div className="flex gap-6">
             {/* Sidebar - Fixed width, scrollable */}
             <aside 
-              className="w-[280px] flex-shrink-0 overflow-y-auto"
+              className="w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200"
               style={{ maxHeight: 'calc(100vh - 300px)' }}
               data-testid="sidebar-filters"
             >
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h2 className="text-lg font-bold mb-4 text-gray-900">
-                  Refine Results
-                </h2>
-                
-                {/* Placeholder filter sections */}
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-sm font-semibold mb-2 text-gray-700">Property Type</h3>
-                    <div className="h-32 bg-white rounded border border-gray-200" />
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-semibold mb-2 text-gray-700">Location</h3>
-                    <div className="h-32 bg-white rounded border border-gray-200" />
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-semibold mb-2 text-gray-700">Features</h3>
-                    <div className="h-32 bg-white rounded border border-gray-200" />
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-semibold mb-2 text-gray-700">Square Footage</h3>
-                    <div className="h-32 bg-white rounded border border-gray-200" />
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-semibold mb-2 text-gray-700">Style</h3>
-                    <div className="h-32 bg-white rounded border border-gray-200" />
-                  </div>
+              {/* Sidebar Search Box */}
+              <div className="p-4 border-b border-gray-200">
+                <div className="flex items-center bg-white rounded border border-gray-300">
+                  <Search className="h-4 w-4 text-gray-400 ml-3" />
+                  <Input
+                    type="search"
+                    placeholder="Search here..."
+                    className="border-0 bg-transparent text-sm focus-visible:ring-0 h-10 px-3 flex-1"
+                    data-testid="input-sidebar-search"
+                  />
                 </div>
+              </div>
+
+              {/* Scrollable Filter List */}
+              <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+                {sidebarFilters.map((filter) => (
+                  <FilterToggle
+                    key={filter.label}
+                    label={filter.label}
+                    count={filter.count}
+                    defaultChecked={selectedFilters['Sidebar']?.has(filter.label) || false}
+                    onChange={(checked) => handleFilterToggle('Sidebar', filter.label, checked)}
+                  />
+                ))}
               </div>
             </aside>
 
