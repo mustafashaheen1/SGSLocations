@@ -1,48 +1,84 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 
 export default function HeroSection() {
   const [heroSearchQuery, setHeroSearchQuery] = useState('');
+  const [videoError, setVideoError] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleHeroSearch = () => {
     console.log('Hero search triggered:', heroSearchQuery);
+  };
+
+  // Fallback images for carousel
+  const fallbackImages = [
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2070&auto=format&fit=crop'
+  ];
+
+  // Rotate through images if video fails
+  useEffect(() => {
+    if (videoError) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % fallbackImages.length);
+      }, 5000); // Change image every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [videoError, fallbackImages.length]);
+
+  const handleVideoError = () => {
+    console.log('Video failed to load, switching to image carousel');
+    setVideoError(true);
   };
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Video with Image Fallback */}
       <div className="absolute inset-0">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          poster="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
-        >
-          <source src="https://imagelocations.com/video/versace-evo-short.mp4" type="video/mp4" />
-          {/* Fallback to image if video doesn't load */}
-          Your browser does not support the video tag.
-        </video>
-        
-        {/* Fallback Background Image (shown if video fails to load) */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop)',
-            zIndex: -1
-          }}
-        />
+        {!videoError ? (
+          <>
+            {/* Video Background */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+              onError={handleVideoError}
+              poster={fallbackImages[0]}
+              data-testid="hero-video"
+            >
+              <source src="https://imagelocations.com/video/versace-evo-short.mp4" type="video/mp4" />
+            </video>
+          </>
+        ) : (
+          <>
+            {/* Fallback Image Carousel */}
+            {fallbackImages.map((image, index) => (
+              <div
+                key={image}
+                className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+                style={{
+                  backgroundImage: `url(${image})`,
+                  opacity: index === currentImageIndex ? 1 : 0,
+                  zIndex: index === currentImageIndex ? 1 : 0
+                }}
+                data-testid={`hero-fallback-image-${index}`}
+              />
+            ))}
+          </>
+        )}
         
         {/* Dark Overlay for Text Readability */}
-        <div className="absolute inset-0 bg-black opacity-30" />
+        <div className="absolute inset-0 bg-black opacity-30 z-10" />
       </div>
 
       {/* Centered Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center">
+      <div className="relative z-20 flex flex-col items-center justify-center h-full px-4 text-center">
         {/* Main Heading */}
         <h1 
           className="font-bold text-white mb-5"
