@@ -32,6 +32,7 @@ export default function SearchPage() {
   const [dropdownSearches, setDropdownSearches] = useState<Record<string, string>>({});
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const mainContentRef = useRef<HTMLDivElement | null>(null);
 
   // Load filters from URL on mount
@@ -603,40 +604,42 @@ export default function SearchPage() {
 
           <div className="md:flex gap-6">
             {/* Desktop Sidebar - Hidden on mobile */}
-            <aside 
-              className="hidden md:block w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200"
-              style={{ maxHeight: 'calc(100vh - 300px)' }}
-              data-testid="sidebar-filters"
-            >
-              {/* Sidebar Search Box */}
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex items-center bg-white rounded border border-gray-300">
-                  <Search className="h-4 w-4 text-gray-400 ml-3" />
-                  <Input
-                    type="search"
-                    placeholder="Search here..."
-                    value={sidebarSearchInput}
-                    onChange={(e) => setSidebarSearchInput(e.target.value)}
-                    className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
-                    data-testid="input-sidebar-search"
-                  />
+            {isSidebarVisible && (
+              <aside 
+                className="hidden md:block w-[280px] flex-shrink-0 bg-gray-50 rounded-lg border border-gray-200 animate-in slide-in-from-left-5 duration-300"
+                style={{ maxHeight: 'calc(100vh - 300px)' }}
+                data-testid="sidebar-filters"
+              >
+                {/* Sidebar Search Box */}
+                <div className="p-4 border-b border-gray-200">
+                  <div className="flex items-center bg-white rounded border border-gray-300">
+                    <Search className="h-4 w-4 text-gray-400 ml-3" />
+                    <Input
+                      type="search"
+                      placeholder="Search here..."
+                      value={sidebarSearchInput}
+                      onChange={(e) => setSidebarSearchInput(e.target.value)}
+                      className="border-0 bg-transparent text-sm focus-visible:ring-1 focus-visible:ring-gray-300 h-10 px-3 flex-1"
+                      data-testid="input-sidebar-search"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Scrollable Filter List */}
-              <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
-                {sidebarFilters.map((filter) => (
-                  <FilterToggle
-                    key={filter.label}
-                    label={filter.label}
-                    count={filter.count}
-                    defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
-                    onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
-                    disabled={isLoading}
-                  />
-                ))}
-              </div>
-            </aside>
+                {/* Scrollable Filter List */}
+                <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+                  {sidebarFilters.map((filter) => (
+                    <FilterToggle
+                      key={filter.label}
+                      label={filter.label}
+                      count={filter.count}
+                      defaultChecked={selectedFilters[filter.category]?.has(filter.label) || false}
+                      onChange={(checked) => handleFilterToggle(filter.category, filter.label, checked)}
+                      disabled={isLoading}
+                    />
+                  ))}
+                </div>
+              </aside>
+            )}
 
             {/* Main Content Area - Flexible width, scrollable */}
             <div 
@@ -789,6 +792,23 @@ export default function SearchPage() {
           </div>
         </div>
       </main>
+
+      {/* Floating Action Button - Desktop Only */}
+      <button
+        onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+        className="hidden md:flex fixed left-4 items-center justify-center w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
+        style={{
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: '#dc2626',
+          zIndex: 45
+        }}
+        data-testid="button-toggle-sidebar"
+      >
+        <Search 
+          className={`w-6 h-6 text-white transition-transform duration-300 ${isSidebarVisible ? 'rotate-90' : 'rotate-0'}`}
+        />
+      </button>
       
       <Footer />
     </div>
