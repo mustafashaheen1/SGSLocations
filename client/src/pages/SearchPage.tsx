@@ -98,15 +98,15 @@ export default function SearchPage() {
     setOpenDropdown(openDropdown === filter ? null : filter);
   };
 
-  // Sample filter data for different categories
+  // Filter data for different categories
   const getFilterOptions = (filterName: string) => {
     const options: Record<string, Array<{ label: string; count: number }>> = {
       'Categories': [
         { label: 'Residential', count: 763 },
         { label: 'Commercial', count: 412 },
+        { label: 'Natural', count: 289 },
         { label: 'Industrial', count: 156 },
-        { label: 'Outdoor', count: 289 },
-        { label: 'Historic', count: 98 },
+        { label: 'Historical', count: 98 },
       ],
       'Permits': [
         { label: 'Film Permit Available', count: 542 },
@@ -116,15 +116,20 @@ export default function SearchPage() {
       'City': [
         { label: 'Dallas', count: 425 },
         { label: 'Fort Worth', count: 312 },
-        { label: 'Arlington', count: 189 },
+        { label: 'Frisco', count: 198 },
         { label: 'Plano', count: 156 },
+        { label: 'Denton', count: 143 },
+        { label: 'Arlington', count: 189 },
         { label: 'Irving', count: 134 },
+        { label: 'McKinney', count: 112 },
+        { label: 'Carrollton', count: 98 },
       ],
       'County': [
         { label: 'Dallas County', count: 634 },
         { label: 'Tarrant County', count: 478 },
         { label: 'Denton County', count: 223 },
         { label: 'Collin County', count: 189 },
+        { label: 'Rockwall County', count: 87 },
       ],
       'Access': [
         { label: 'Street Parking', count: 512 },
@@ -145,10 +150,8 @@ export default function SearchPage() {
         { label: 'Deck', count: 189 },
       ],
       'Pool': [
-        { label: 'In-ground Pool', count: 234 },
-        { label: 'Above-ground Pool', count: 98 },
-        { label: 'Infinity Pool', count: 45 },
-        { label: 'No Pool', count: 456 },
+        { label: 'Yes', count: 377 },
+        { label: 'No', count: 456 },
       ],
       'Walls': [
         { label: 'Brick', count: 312 },
